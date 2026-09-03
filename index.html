@@ -673,8 +673,8 @@ function kBlockHTML(n) {
     ${showMoshikomi ? `
     <div class="row">
       <div class="checkbox-group"><label><input type="checkbox" id="${p}moshikomi_doujou"> 同上（契約名義などが申込1と同じ）</label></div>
-      <div class="radio-group">
-        <span style="font-size:12px;color:var(--muted);font-weight:700;margin-right:4px;">申込種別:</span>
+      <div class="radio-group" data-group="${p}moshikomi_shubetsu">
+        <span style="font-size:12px;color:var(--muted);font-weight:700;margin-right:4px;">申込種別${reqMark(true)}:</span>
         <label><input type="radio" name="${p}moshikomi_shubetsu" value="tsujou"> 通常</label>
         <label><input type="radio" name="${p}moshikomi_shubetsu" value="shinki"> 新規</label>
         <label><input type="radio" name="${p}moshikomi_shubetsu" value="saikeiyaku"> 再契約</label>
@@ -693,10 +693,10 @@ function kBlockHTML(n) {
       </div>
     </div>
     <div class="row">
-      ${textField(p + 'plan_other_text', 'その他プラン名（該当時）')}
-      ${textField(p + 'genzai_plan', '現在のプラン名')}
-      ${textField(p + 'rikiritsu', '力率（％）', '例: 95')}
-      ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30')}
+      ${textField(p + 'plan_other_text', 'その他プラン名（その他選択時のみ必須）')}
+      ${textField(p + 'genzai_plan', '現在のプラン名', null, true)}
+      ${textField(p + 'rikiritsu', '力率（％）', '例: 95', true)}
+      ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30', true)}
     </div>
     <div class="row">
       <div class="field" data-group="${p}keishubetsu">
@@ -725,23 +725,23 @@ function kBlockHTML(n) {
 
     <div class="section-title">検針・明細情報</div>
     <div class="row">
-      ${textField(p + 'taisho_nengetsu', '対象年月', '例: 2024年5月')}
-      ${textField(p + 'shiyouryou', '使用量（kWh・㎥）', '例: 350')}
-      ${textField(p + 'nissu', '日数', '例: 31')}
+      ${textField(p + 'taisho_nengetsu', '対象年月', '例: 2024年5月', true)}
+      ${textField(p + 'shiyouryou', '使用量（kWh・㎥）', '例: 350', true)}
+      ${textField(p + 'nissu', '日数', '例: 31', true)}
     </div>
     <div class="row">
-      ${textField(p + 'kenshin_from', '検針期間（開始）', '例: 5/1')}
-      ${textField(p + 'kenshin_to', '検針期間（終了）', '例: 5/31')}
-      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12,345')}
-      ${textField(p + 'kakunin_nengetsubi', '確認日時', '例: 2024年6月1日')}
+      ${textField(p + 'kenshin_from', '検針期間（開始）', '例: 5/1', true)}
+      ${textField(p + 'kenshin_to', '検針期間（終了）', '例: 5/31', true)}
+      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12,345', true)}
+      ${textField(p + 'kakunin_nengetsubi', '確認日時', '例: 2024年6月1日', true)}
     </div>
     <div class="row">
-      ${textField(p + 'denryoku_gas', '電力会社/ガス会社')}
-      ${textField(p + 'jigyousho', '事業所')}
+      ${textField(p + 'denryoku_gas', '電力会社/ガス会社', null, true)}
+      ${textField(p + 'jigyousho', '事業所', null, true)}
     </div>
     <div class="row">
-      ${textField(p + 'denwa', '電話番号')}
-      ${textField(p + 'operator', '担当オペレーター')}
+      ${textField(p + 'denwa', '電話番号', null, true)}
+      ${textField(p + 'operator', '担当オペレーター', null, true)}
     </div>
   </fieldset>`;
 }
@@ -801,9 +801,9 @@ function sBlockHTML(n) {
   <fieldset class="block-fs">
     <legend>${n === 1 ? '①（必須）' : '②'}</legend>
     <div class="row">
-      ${textField(p + 'moshikomi_no', '申込番号')}
-      <div class="field">
-        <label>申込種別</label>
+      ${textField(p + 'moshikomi_no', '申込番号', null, true)}
+      <div class="field" data-group="${p}moshikomi_shubetsu">
+        <label>申込種別<span class="required-mark">*</span></label>
         <div class="radio-group">
           <label><input type="radio" name="${p}moshikomi_shubetsu" value="tsujou"> 通常</label>
           <label><input type="radio" name="${p}moshikomi_shubetsu" value="shinki"> 新規</label>
@@ -824,9 +824,9 @@ function sBlockHTML(n) {
       </div>
     </div>
     <div class="row">
-      ${textField(p + 'plan_other_text', 'その他プラン名（該当時）')}
-      ${textField(p + 'rikiritsu', '力率（％）', '例: 95')}
-      ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30')}
+      ${textField(p + 'plan_other_text', 'その他プラン名（その他選択時のみ必須）')}
+      ${textField(p + 'rikiritsu', '力率（％）', '例: 95', true)}
+      ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30', true)}
     </div>
     <div class="row">
       <div class="field" data-group="${p}shubetsu">
@@ -838,7 +838,7 @@ function sBlockHTML(n) {
           <label><input type="radio" name="${p}shubetsu" value="" checked> 選択なし</label>
         </div>
       </div>
-      ${textField(p + 'genzai_plan', '現在のプラン名')}
+      ${textField(p + 'genzai_plan', '現在のプラン名', null, true)}
     </div>
 
     <div class="section-title">契約名義</div>
@@ -856,24 +856,24 @@ function sBlockHTML(n) {
 
     <div class="section-title">検針・明細情報</div>
     <div class="row">
-      ${textField(p + 'taisho_nengetsu', '対象年月', '例: 2024年5月')}
-      ${textField(p + 'shiyouryou', '使用量（kWh・㎥）', '例: 350')}
-      ${textField(p + 'nissu', '日数', '例: 31')}
+      ${textField(p + 'taisho_nengetsu', '対象年月', '例: 2024年5月', true)}
+      ${textField(p + 'shiyouryou', '使用量（kWh・㎥）', '例: 350', true)}
+      ${textField(p + 'nissu', '日数', '例: 31', true)}
     </div>
     <div class="row">
-      ${wideTextField(p + 'kenshin_period', '検針期間', '例: 2024年5月1日 ～ 2024年5月31日')}
+      ${wideTextField(p + 'kenshin_period', '検針期間', '例: 2024年5月1日 ～ 2024年5月31日', true)}
     </div>
     <div class="row">
-      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12,345')}
-      ${textField(p + 'kakunin_nengetsubi', '確認日時', '例: 2024年6月1日')}
+      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12,345', true)}
+      ${textField(p + 'kakunin_nengetsubi', '確認日時', '例: 2024年6月1日', true)}
     </div>
     <div class="row">
-      ${textField(p + 'denryoku_gas', '電力会社/ガス会社')}
-      ${textField(p + 'jigyousho', '事業所')}
+      ${textField(p + 'denryoku_gas', '電力会社/ガス会社', null, true)}
+      ${textField(p + 'jigyousho', '事業所', null, true)}
     </div>
     <div class="row">
-      ${textField(p + 'denwa', '電話番号')}
-      ${textField(p + 'operator', '担当オペレーター')}
+      ${textField(p + 'denwa', '電話番号', null, true)}
+      ${textField(p + 'operator', '担当オペレーター', null, true)}
     </div>
   </fieldset>`;
 }
@@ -1278,18 +1278,42 @@ function markInvalidGroup(name, label, errors) {
   }
 }
 
+function checkedValue(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+
 function validateKenshin() {
   const panel = document.getElementById('panel-kenshin');
   clearInvalid(panel);
   const errors = [];
   for (let n = 1; n <= kBlockCount; n++) {
     const p = `k_b${n}_`;
-    markInvalidGroup(p + 'plan', `申込番号${n}の契約プラン`, errors);
-    markInvalidGroup(p + 'keishubetsu', `申込番号${n}の契約種別`, errors);
-    markInvalidField(p + 'furigana', `申込番号${n}のフリガナ`, errors);
-    markInvalidField(p + 'keiyaku_meigi', `申込番号${n}の契約名義`, errors);
-    markInvalidField(p + 'customer_no', `申込番号${n}のお客様番号`, errors);
-    markInvalidField(p + 'supply_no', `申込番号${n}の供給地点特定番号`, errors);
+    const label = `申込番号${n}`;
+    if (n >= 2) markInvalidGroup(p + 'moshikomi_shubetsu', `${label}の申込種別`, errors);
+    markInvalidGroup(p + 'plan', `${label}の契約プラン`, errors);
+    if (checkedValue(p + 'plan') === 'other') {
+      markInvalidField(p + 'plan_other_text', `${label}のその他プラン名`, errors);
+    }
+    markInvalidField(p + 'genzai_plan', `${label}の現在のプラン名`, errors);
+    markInvalidField(p + 'rikiritsu', `${label}の力率`, errors);
+    markInvalidField(p + 'keiyaku_youryou', `${label}の契約容量`, errors);
+    markInvalidGroup(p + 'keishubetsu', `${label}の契約種別`, errors);
+    markInvalidField(p + 'furigana', `${label}のフリガナ`, errors);
+    markInvalidField(p + 'keiyaku_meigi', `${label}の契約名義`, errors);
+    markInvalidField(p + 'customer_no', `${label}のお客様番号`, errors);
+    markInvalidField(p + 'supply_no', `${label}の供給地点特定番号`, errors);
+    markInvalidField(p + 'taisho_nengetsu', `${label}の対象年月`, errors);
+    markInvalidField(p + 'shiyouryou', `${label}の使用量`, errors);
+    markInvalidField(p + 'nissu', `${label}の日数`, errors);
+    markInvalidField(p + 'kenshin_from', `${label}の検針期間（開始）`, errors);
+    markInvalidField(p + 'kenshin_to', `${label}の検針期間（終了）`, errors);
+    markInvalidField(p + 'meisai_kingaku', `${label}の明細金額合計`, errors);
+    markInvalidField(p + 'kakunin_nengetsubi', `${label}の確認日時`, errors);
+    markInvalidField(p + 'denryoku_gas', `${label}の電力会社/ガス会社`, errors);
+    markInvalidField(p + 'jigyousho', `${label}の事業所`, errors);
+    markInvalidField(p + 'denwa', `${label}の電話番号`, errors);
+    markInvalidField(p + 'operator', `${label}の担当オペレーター`, errors);
   }
   return errors;
 }
@@ -1301,12 +1325,30 @@ function validateShindan() {
   for (let n = 1; n <= sBlockCount; n++) {
     const p = `s_b${n}_`;
     const label = n === 1 ? '①' : '②';
+    markInvalidField(p + 'moshikomi_no', `${label}の申込番号`, errors);
+    markInvalidGroup(p + 'moshikomi_shubetsu', `${label}の申込種別`, errors);
     markInvalidGroup(p + 'plan', `${label}の契約プラン`, errors);
+    if (checkedValue(p + 'plan') === 'other') {
+      markInvalidField(p + 'plan_other_text', `${label}のその他プラン名`, errors);
+    }
+    markInvalidField(p + 'rikiritsu', `${label}の力率`, errors);
+    markInvalidField(p + 'keiyaku_youryou', `${label}の契約容量`, errors);
     markInvalidGroup(p + 'shubetsu', `${label}の契約種別`, errors);
+    markInvalidField(p + 'genzai_plan', `${label}の現在のプラン名`, errors);
     markInvalidField(p + 'furigana', `${label}のフリガナ`, errors);
     markInvalidField(p + 'keiyaku_meigi', `${label}の契約名義`, errors);
     markInvalidField(p + 'customer_no', `${label}のお客様番号`, errors);
     markInvalidField(p + 'supply_no', `${label}の供給地点特定番号`, errors);
+    markInvalidField(p + 'taisho_nengetsu', `${label}の対象年月`, errors);
+    markInvalidField(p + 'shiyouryou', `${label}の使用量`, errors);
+    markInvalidField(p + 'nissu', `${label}の日数`, errors);
+    markInvalidField(p + 'kenshin_period', `${label}の検針期間`, errors);
+    markInvalidField(p + 'meisai_kingaku', `${label}の明細金額合計`, errors);
+    markInvalidField(p + 'kakunin_nengetsubi', `${label}の確認日時`, errors);
+    markInvalidField(p + 'denryoku_gas', `${label}の電力会社/ガス会社`, errors);
+    markInvalidField(p + 'jigyousho', `${label}の事業所`, errors);
+    markInvalidField(p + 'denwa', `${label}の電話番号`, errors);
+    markInvalidField(p + 'operator', `${label}の担当オペレーター`, errors);
   }
   return errors;
 }
