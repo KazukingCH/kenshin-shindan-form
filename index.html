@@ -23,7 +23,7 @@
     <fieldset>
       <legend>お客様情報</legend>
       <div class="row">
-        <div class="field"><label>ご契約者名<span class="required-mark">*</span></label><input type="text" id="k_keiyakusha"></div>
+        <div class="field"><label>ご契約者名</label><input type="text" id="k_keiyakusha"></div>
         <div class="field"><label>ご担当者名</label><input type="text" id="k_tantousha"></div>
       </div>
     </fieldset>
@@ -36,7 +36,7 @@
     <fieldset>
       <legend>署名・販売店情報</legend>
       <div class="row">
-        <div class="field wide"><label>ご署名欄（お客様氏名）<span class="required-mark">*</span></label><input type="text" id="k_signature" placeholder="必ずお客様がご記入ください"></div>
+        <div class="field wide"><label>ご署名欄（お客様氏名）</label><input type="text" id="k_signature" placeholder="必ずお客様がご記入ください"></div>
       </div>
       <div class="row">
         <div class="field"><label>販売店名</label><input type="text" id="k_hanbaiten"></div>
@@ -73,7 +73,7 @@
     <fieldset>
       <legend>共通情報</legend>
       <div class="row">
-        <div class="field"><label>ご契約者名<span class="required-mark">*</span></label><input type="text" id="s_keiyakusha"></div>
+        <div class="field"><label>ご契約者名</label><input type="text" id="s_keiyakusha"></div>
         <div class="field"><label>ご担当者名</label><input type="text" id="s_tantousha"></div>
       </div>
       <div class="row">
@@ -980,7 +980,6 @@ function validateKenshin() {
   const panel = document.getElementById('panel-kenshin');
   clearInvalid(panel);
   const errors = [];
-  markInvalidField('k_keiyakusha', 'ご契約者名', errors);
   for (let n = 1; n <= kBlockCount; n++) {
     const p = `k_b${n}_`;
     markInvalidGroup(p + 'plan', `申込番号${n}の契約プラン`, errors);
@@ -990,7 +989,6 @@ function validateKenshin() {
     markInvalidField(p + 'customer_no', `申込番号${n}のお客様番号`, errors);
     markInvalidField(p + 'supply_no', `申込番号${n}の供給地点特定番号`, errors);
   }
-  markInvalidField('k_signature', 'ご署名欄', errors);
   return errors;
 }
 
@@ -998,7 +996,6 @@ function validateShindan() {
   const panel = document.getElementById('panel-shindan');
   clearInvalid(panel);
   const errors = [];
-  markInvalidField('s_keiyakusha', 'ご契約者名', errors);
   for (let n = 1; n <= sBlockCount; n++) {
     const p = `s_b${n}_`;
     const label = n === 1 ? '①' : '②';
