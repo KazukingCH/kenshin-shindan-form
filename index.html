@@ -23,7 +23,7 @@
     <fieldset>
       <legend>お客様情報</legend>
       <div class="row">
-        <div class="field"><label>ご契約者名</label><input type="text" id="k_keiyakusha"></div>
+        <div class="field"><label>ご契約者名<span class="required-mark">*</span></label><input type="text" id="k_keiyakusha"></div>
         <div class="field"><label>ご担当者名</label><input type="text" id="k_tantousha"></div>
       </div>
     </fieldset>
@@ -36,7 +36,7 @@
     <fieldset>
       <legend>署名・販売店情報</legend>
       <div class="row">
-        <div class="field wide"><label>ご署名欄（お客様氏名）</label><input type="text" id="k_signature" placeholder="必ずお客様がご記入ください"></div>
+        <div class="field wide"><label>ご署名欄（お客様氏名）<span class="required-mark">*</span></label><input type="text" id="k_signature" placeholder="必ずお客様がご記入ください"></div>
       </div>
       <div class="row">
         <div class="field"><label>販売店名</label><input type="text" id="k_hanbaiten"></div>
@@ -73,7 +73,7 @@
     <fieldset>
       <legend>共通情報</legend>
       <div class="row">
-        <div class="field"><label>ご契約者名</label><input type="text" id="s_keiyakusha"></div>
+        <div class="field"><label>ご契約者名<span class="required-mark">*</span></label><input type="text" id="s_keiyakusha"></div>
         <div class="field"><label>ご担当者名</label><input type="text" id="s_tantousha"></div>
       </div>
       <div class="row">
@@ -336,6 +336,21 @@ legend {
   outline-offset: -1px;
 }
 
+.required-mark {
+  color: var(--danger);
+  margin-left: 2px;
+  font-weight: 800;
+}
+.field.invalid input[type="text"] {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+}
+.field.invalid label,
+.section-title.invalid {
+  color: var(--danger);
+}
+.section-title.invalid { border-left-color: var(--danger); }
+
 .radio-group, .checkbox-group {
   display: flex;
   flex-wrap: wrap;
@@ -523,12 +538,15 @@ function el(html) {
   return t.content.firstElementChild;
 }
 
-function textField(id, label, placeholder) {
-  return `<div class="field"><label>${label}</label>
+function reqMark(required) {
+  return required ? '<span class="required-mark">*</span>' : '';
+}
+function textField(id, label, placeholder, required) {
+  return `<div class="field" data-field="${id}"><label>${label}${reqMark(required)}</label>
     <input type="text" id="${id}" ${placeholder ? `placeholder="${placeholder}"` : ''}></div>`;
 }
-function wideTextField(id, label, placeholder) {
-  return `<div class="field wide"><label>${label}</label>
+function wideTextField(id, label, placeholder, required) {
+  return `<div class="field wide" data-field="${id}"><label>${label}${reqMark(required)}</label>
     <input type="text" id="${id}" ${placeholder ? `placeholder="${placeholder}"` : ''}></div>`;
 }
 
@@ -554,9 +572,9 @@ function kBlockHTML(n) {
       </div>
     </div>` : ''}
 
-    <div class="section-title">契約プラン</div>
+    <div class="section-title" data-group="${p}plan">契約プラン<span class="required-mark">*</span></div>
     <div class="row">
-      <div class="radio-group">
+      <div class="radio-group" data-group="${p}plan">
         <label><input type="radio" name="${p}plan" value="A"> 従量電灯A</label>
         <label><input type="radio" name="${p}plan" value="B"> 従量電灯B</label>
         <label><input type="radio" name="${p}plan" value="C"> 従量電灯C</label>
@@ -571,8 +589,8 @@ function kBlockHTML(n) {
       ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30')}
     </div>
     <div class="row">
-      <div class="field">
-        <label>契約種別</label>
+      <div class="field" data-group="${p}keishubetsu">
+        <label>契約種別<span class="required-mark">*</span></label>
         <div class="radio-group">
           <label><input type="radio" name="${p}keishubetsu" value="juryou"> 従量</label>
           <label><input type="radio" name="${p}keishubetsu" value="douryoku"> 動力</label>
@@ -584,12 +602,12 @@ function kBlockHTML(n) {
 
     <div class="section-title">契約名義</div>
     <div class="row">
-      ${textField(p + 'furigana', 'フリガナ')}
-      ${textField(p + 'keiyaku_meigi', '契約名義')}
+      ${textField(p + 'furigana', 'フリガナ', null, true)}
+      ${textField(p + 'keiyaku_meigi', '契約名義', null, true)}
     </div>
     <div class="row">
-      ${textField(p + 'customer_no', 'お客様番号（数字のみ・最大23桁）')}
-      ${textField(p + 'supply_no', '供給地点特定番号（数字のみ・最大23桁）')}
+      ${textField(p + 'customer_no', 'お客様番号（数字のみ・最大23桁）', null, true)}
+      ${textField(p + 'supply_no', '供給地点特定番号（数字のみ・最大23桁）', null, true)}
     </div>
     <div class="row">
       ${wideTextField(p + 'address', '契約使用場所住所（任意）')}
@@ -685,9 +703,9 @@ function sBlockHTML(n) {
       </div>
     </div>
 
-    <div class="section-title">契約プラン</div>
+    <div class="section-title" data-group="${p}plan">契約プラン<span class="required-mark">*</span></div>
     <div class="row">
-      <div class="radio-group">
+      <div class="radio-group" data-group="${p}plan">
         <label><input type="radio" name="${p}plan" value="A"> 従量電灯A</label>
         <label><input type="radio" name="${p}plan" value="B"> 従量電灯B</label>
         <label><input type="radio" name="${p}plan" value="C"> 従量電灯C</label>
@@ -701,8 +719,8 @@ function sBlockHTML(n) {
       ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30')}
     </div>
     <div class="row">
-      <div class="field">
-        <label>契約種別</label>
+      <div class="field" data-group="${p}shubetsu">
+        <label>契約種別<span class="required-mark">*</span></label>
         <div class="radio-group">
           <label><input type="radio" name="${p}shubetsu" value="juryou"> 従量</label>
           <label><input type="radio" name="${p}shubetsu" value="douryoku"> 動力</label>
@@ -715,12 +733,12 @@ function sBlockHTML(n) {
 
     <div class="section-title">契約名義</div>
     <div class="row">
-      ${textField(p + 'furigana', 'フリガナ')}
-      ${textField(p + 'keiyaku_meigi', '契約名義')}
+      ${textField(p + 'furigana', 'フリガナ', null, true)}
+      ${textField(p + 'keiyaku_meigi', '契約名義', null, true)}
     </div>
     <div class="row">
-      ${textField(p + 'customer_no', 'お客様番号')}
-      ${textField(p + 'supply_no', '供給地点特定番号')}
+      ${textField(p + 'customer_no', 'お客様番号', null, true)}
+      ${textField(p + 'supply_no', '供給地点特定番号', null, true)}
     </div>
     <div class="row">
       ${wideTextField(p + 'address', '契約使用場所住所（任意・PDF下部の余白に「' + (n === 1 ? '①' : '②') + '住所：」として記載されます）')}
@@ -935,7 +953,89 @@ function setStatus(id, msg, cls) {
   s.className = 'status-msg' + (cls ? ' ' + cls : '');
 }
 
+/* ===================== Required-field validation ===================== */
+function clearInvalid(root) {
+  root.querySelectorAll('.invalid').forEach(elx => elx.classList.remove('invalid'));
+}
+
+function markInvalidField(id, label, errors) {
+  const input = document.getElementById(id);
+  if (!input) return;
+  if (!input.value.trim()) {
+    const wrap = input.closest('.field');
+    if (wrap) wrap.classList.add('invalid');
+    errors.push({ label, el: input });
+  }
+}
+
+function markInvalidGroup(name, label, errors) {
+  const checked = document.querySelector(`input[name="${name}"]:checked`);
+  if (!checked || !checked.value) {
+    document.querySelectorAll(`[data-group="${name}"]`).forEach(g => g.classList.add('invalid'));
+    errors.push({ label, el: document.querySelector(`input[name="${name}"]`) });
+  }
+}
+
+function validateKenshin() {
+  const panel = document.getElementById('panel-kenshin');
+  clearInvalid(panel);
+  const errors = [];
+  markInvalidField('k_keiyakusha', 'ご契約者名', errors);
+  for (let n = 1; n <= kBlockCount; n++) {
+    const p = `k_b${n}_`;
+    markInvalidGroup(p + 'plan', `申込番号${n}の契約プラン`, errors);
+    markInvalidGroup(p + 'keishubetsu', `申込番号${n}の契約種別`, errors);
+    markInvalidField(p + 'furigana', `申込番号${n}のフリガナ`, errors);
+    markInvalidField(p + 'keiyaku_meigi', `申込番号${n}の契約名義`, errors);
+    markInvalidField(p + 'customer_no', `申込番号${n}のお客様番号`, errors);
+    markInvalidField(p + 'supply_no', `申込番号${n}の供給地点特定番号`, errors);
+  }
+  markInvalidField('k_signature', 'ご署名欄', errors);
+  return errors;
+}
+
+function validateShindan() {
+  const panel = document.getElementById('panel-shindan');
+  clearInvalid(panel);
+  const errors = [];
+  markInvalidField('s_keiyakusha', 'ご契約者名', errors);
+  for (let n = 1; n <= sBlockCount; n++) {
+    const p = `s_b${n}_`;
+    const label = n === 1 ? '①' : '②';
+    markInvalidGroup(p + 'plan', `${label}の契約プラン`, errors);
+    markInvalidGroup(p + 'shubetsu', `${label}の契約種別`, errors);
+    markInvalidField(p + 'furigana', `${label}のフリガナ`, errors);
+    markInvalidField(p + 'keiyaku_meigi', `${label}の契約名義`, errors);
+    markInvalidField(p + 'customer_no', `${label}のお客様番号`, errors);
+    markInvalidField(p + 'supply_no', `${label}の供給地点特定番号`, errors);
+  }
+  return errors;
+}
+
+// Clear the red "invalid" highlight the moment the user fixes a field,
+// rather than making them re-submit to see it go away.
+document.querySelectorAll('main').forEach(mainEl => {
+  mainEl.addEventListener('input', e => {
+    const wrap = e.target.closest('.field');
+    if (wrap) wrap.classList.remove('invalid');
+  });
+  mainEl.addEventListener('change', e => {
+    if (e.target.type === 'radio' && e.target.name) {
+      document.querySelectorAll(`[data-group="${e.target.name}"]`).forEach(g => g.classList.remove('invalid'));
+    }
+  });
+});
+
 document.getElementById('k_generate').addEventListener('click', async () => {
+  const errors = validateKenshin();
+  if (errors.length) {
+    setStatus('k_status', '必須項目（*）が未入力です：' + errors.map(e => e.label).join('、'), 'error');
+    if (errors[0].el) {
+      errors[0].el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      errors[0].el.focus({ preventScroll: true });
+    }
+    return;
+  }
   const btn = document.getElementById('k_generate');
   btn.disabled = true;
   setStatus('k_status', 'PDFを作成しています…');
@@ -952,6 +1052,15 @@ document.getElementById('k_generate').addEventListener('click', async () => {
 });
 
 document.getElementById('s_generate').addEventListener('click', async () => {
+  const errors = validateShindan();
+  if (errors.length) {
+    setStatus('s_status', '必須項目（*）が未入力です：' + errors.map(e => e.label).join('、'), 'error');
+    if (errors[0].el) {
+      errors[0].el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      errors[0].el.focus({ preventScroll: true });
+    }
+    return;
+  }
   const btn = document.getElementById('s_generate');
   btn.disabled = true;
   setStatus('s_status', 'PDFを作成しています…');
