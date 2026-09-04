@@ -871,12 +871,35 @@ function wireUsageUnit(shubetsuName, unitSpanId) {
 }
 
 // Auto-insert thousands separators as the user types into a money field.
+function toHalfWidthDigits(s) {
+  // モバイルの日本語キーボードは全角数字を入力してくることがあるため、半角に正規化する。
+  return s.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
+}
+
+// カンマ区切りに整形すると桁数（カンマの位置）が変わってカーソルが末尾に飛んでしまい、
+// 特にモバイルでは入力途中の桁が入れ替わって見える不具合があった。カーソルより前にある
+// 「数字の個数」を基準に、整形後も同じ位置にカーソルを戻すことで防ぐ。
 function wireThousandsFormatter(id) {
   const input = document.getElementById(id);
   if (!input) return;
+  input.setAttribute('inputmode', 'numeric');
   input.addEventListener('input', () => {
-    const digits = input.value.replace(/[^\d]/g, '');
-    input.value = digits ? Number(digits).toLocaleString('ja-JP') : '';
+    const raw = toHalfWidthDigits(input.value);
+    const caret = input.selectionStart == null ? raw.length : input.selectionStart;
+    const digitsBeforeCaret = raw.slice(0, caret).replace(/[^\d]/g, '').length;
+    const digits = raw.replace(/[^\d]/g, '');
+    const formatted = digits ? Number(digits).toLocaleString('ja-JP') : '';
+    input.value = formatted;
+    let pos = formatted.length, seen = 0;
+    if (digitsBeforeCaret === 0) {
+      pos = 0;
+    } else {
+      for (let i = 0; i < formatted.length; i++) {
+        if (/\d/.test(formatted[i])) seen++;
+        if (seen === digitsBeforeCaret) { pos = i + 1; break; }
+      }
+    }
+    input.setSelectionRange(pos, pos);
   });
 }
 wireThousandsFormatter('s_shiharai_kingaku');
@@ -1055,7 +1078,7 @@ function sBlockHTML(n) {
   <fieldset class="block-fs">
     <legend>${CIRCLED_LABEL[n]}${n === 1 ? '（必須）' : ''}</legend>
     <div class="row">
-      ${textField(p + 'moshikomi_no', '申込番号', null, true)}
+      ${textField(p + 'moshikomi_no', '申込番号', null, false)}
       <div class="field" data-group="${p}moshikomi_shubetsu">
         <label>申込種別<span class="required-mark">*</span></label>
         <div class="radio-group">
@@ -1730,7 +1753,6 @@ function validateShindan() {
   for (let n = 1; n <= sBlockCount; n++) {
     const p = `s_b${n}_`;
     const label = CIRCLED_LABEL[n];
-    markInvalidField(p + 'moshikomi_no', `${label}の申込番号`, errors);
     markInvalidGroup(p + 'moshikomi_shubetsu', `${label}の申込種別`, errors);
     markInvalidGroup(p + 'plan', `${label}の契約プラン`, errors);
     if (checkedValue(p + 'plan') === 'other') {
