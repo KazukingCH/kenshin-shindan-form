@@ -357,6 +357,10 @@ legend {
   border-color: var(--danger);
   background: var(--danger-bg);
 }
+.field.invalid .date-group select {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+}
 .field.invalid label,
 .section-title.invalid {
   color: var(--danger);
@@ -568,6 +572,65 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--accent); }
   margin: 0 0 6px;
 }
 
+/* ---------- date dropdowns & unit-suffix inputs ---------- */
+.date-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.date-group select {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px 6px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+}
+.date-group .date-unit {
+  font-size: 12px;
+  color: var(--muted);
+}
+.date-group .date-sep {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0 2px;
+}
+.date-range-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.date-range-tilde {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 0 2px;
+}
+
+.input-with-suffix {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.input-with-suffix input { flex: 1; min-width: 0; }
+.input-suffix {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.field input[type="text"]:disabled {
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+.field input[type="text"][readonly] {
+  background: var(--surface-2);
+}
+
 </style>
 
 <script>
@@ -597,7 +660,7 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--accent); }
 
 <script>
 window.FIELDS_KENSHIN = {"k_b1_planmark_A": {"page": 0, "type": "mark", "cx": 124.7, "cy": 649.68}, "k_b1_planmark_B": {"page": 0, "type": "mark", "cx": 163.48, "cy": 649.68}, "k_b1_planmark_C": {"page": 0, "type": "mark", "cx": 202.26, "cy": 649.68}, "k_b1_planmark_other": {"page": 0, "type": "mark", "cx": 241.07, "cy": 649.68}, "k_b1_plan_other_text": {"page": 0, "x0": 265, "x1": 330, "type": "text", "size": 7, "align": "left", "y0p": 641.26, "y1p": 658.11}, "k_b1_genzai_plan": {"page": 0, "x0": 145, "x1": 330, "type": "text", "size": 8, "align": "left", "y0p": 624.64, "y1p": 641.26}, "k_b1_rikiritsu": {"page": 0, "x0": 335, "x1": 388, "type": "text", "size": 8, "align": "center", "y0p": 624.64, "y1p": 640.11}, "k_b1_keiyaku_youryou": {"page": 0, "x0": 393, "x1": 465, "type": "text", "size": 8, "align": "center", "y0p": 624.64, "y1p": 639.11}, "k_b1_keishubetsu_juryou": {"page": 0, "type": "mark", "cx": 474.67, "cy": 633.4}, "k_b1_keishubetsu_douryoku": {"page": 0, "type": "mark", "cx": 509.88, "cy": 633.4}, "k_b1_keishubetsu_gas": {"page": 0, "type": "mark", "cx": 545.08, "cy": 633.4}, "k_b1_furigana": {"page": 0, "x0": 143, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 592.32, "y1p": 604.49}, "k_b1_keiyaku_meigi": {"page": 0, "x0": 122, "x1": 560, "type": "text", "size": 10, "align": "left", "y0p": 575.68, "y1p": 592.32}, "k_b1_customer_no": {"page": 0, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 559.05, "y1p": 575.68}, "k_b1_supply_no": {"page": 0, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 542.43, "y1p": 559.05}, "k_b1_address": {"page": 0, "x0": 122, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 519.93, "y1p": 542.43}, "k_b1_taisho_nengetsu": {"page": 0, "x0": 36, "x1": 119, "type": "text", "size": 8.5, "align": "left", "y0p": 481.15, "y1p": 504.92}, "k_b1_shiyouryou": {"page": 0, "x0": 121, "x1": 195, "type": "text", "size": 8, "align": "center", "y0p": 481.15, "y1p": 504.92}, "k_b1_kenshin_from": {"page": 0, "x0": 198, "x1": 249, "type": "text", "size": 7, "align": "center", "y0p": 481.15, "y1p": 504.92}, "k_b1_kenshin_to": {"page": 0, "x0": 261, "x1": 311, "type": "text", "size": 7, "align": "center", "y0p": 481.15, "y1p": 504.92}, "k_b1_nissu": {"page": 0, "x0": 314, "x1": 369, "type": "text", "size": 9, "align": "center", "y0p": 481.15, "y1p": 504.92}, "k_b1_meisai_kingaku": {"page": 0, "x0": 373, "x1": 456, "type": "text", "size": 9, "align": "right", "y0p": 481.15, "y1p": 504.92}, "k_b1_kakunin_nengetsubi": {"page": 0, "x0": 469, "x1": 559, "type": "text", "size": 8, "align": "left", "y0p": 481.15, "y1p": 504.92}, "k_b1_denryoku_gas": {"page": 0, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 464.53, "y1p": 481.15}, "k_b1_jigyousho": {"page": 0, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 464.53, "y1p": 481.15}, "k_b1_denwa": {"page": 0, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 448.11, "y1p": 464.53}, "k_b1_operator": {"page": 0, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 448.11, "y1p": 464.53}, "k_b2_planmark_A": {"page": 0, "type": "mark", "cx": 124.7, "cy": 418.19}, "k_b2_planmark_B": {"page": 0, "type": "mark", "cx": 163.48, "cy": 418.19}, "k_b2_planmark_C": {"page": 0, "type": "mark", "cx": 202.26, "cy": 418.19}, "k_b2_planmark_other": {"page": 0, "type": "mark", "cx": 241.07, "cy": 418.19}, "k_b2_plan_other_text": {"page": 0, "x0": 265, "x1": 330, "type": "text", "size": 7, "align": "left", "y0p": 409.76, "y1p": 426.61}, "k_b2_genzai_plan": {"page": 0, "x0": 145, "x1": 330, "type": "text", "size": 8, "align": "left", "y0p": 393.14, "y1p": 409.76}, "k_b2_rikiritsu": {"page": 0, "x0": 335, "x1": 388, "type": "text", "size": 8, "align": "center", "y0p": 393.14, "y1p": 408.61}, "k_b2_keiyaku_youryou": {"page": 0, "x0": 393, "x1": 465, "type": "text", "size": 8, "align": "center", "y0p": 393.14, "y1p": 407.61}, "k_b2_keishubetsu_juryou": {"page": 0, "type": "mark", "cx": 474.67, "cy": 401.94}, "k_b2_keishubetsu_douryoku": {"page": 0, "type": "mark", "cx": 509.88, "cy": 401.94}, "k_b2_keishubetsu_gas": {"page": 0, "type": "mark", "cx": 545.08, "cy": 401.94}, "k_b2_moshikomi_doujou": {"page": 0, "type": "mark", "cx": 227.32, "cy": 431.88}, "k_b2_moshikomi_tsujou": {"page": 0, "type": "mark", "cx": 309.85, "cy": 431.88}, "k_b2_moshikomi_shinki": {"page": 0, "type": "mark", "cx": 354.86, "cy": 431.88}, "k_b2_moshikomi_saikeiyaku": {"page": 0, "type": "mark", "cx": 399.87, "cy": 431.88}, "k_b2_furigana": {"page": 0, "x0": 143, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 360.82, "y1p": 372.99}, "k_b2_keiyaku_meigi": {"page": 0, "x0": 122, "x1": 560, "type": "text", "size": 10, "align": "left", "y0p": 344.18, "y1p": 360.82}, "k_b2_customer_no": {"page": 0, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 327.55, "y1p": 344.18}, "k_b2_supply_no": {"page": 0, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 310.93, "y1p": 327.55}, "k_b2_address": {"page": 0, "x0": 122, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 288.43, "y1p": 310.93}, "k_b2_taisho_nengetsu": {"page": 0, "x0": 36, "x1": 119, "type": "text", "size": 8.5, "align": "left", "y0p": 249.65, "y1p": 273.42}, "k_b2_shiyouryou": {"page": 0, "x0": 121, "x1": 195, "type": "text", "size": 8, "align": "center", "y0p": 249.65, "y1p": 273.42}, "k_b2_kenshin_from": {"page": 0, "x0": 198, "x1": 249, "type": "text", "size": 7, "align": "center", "y0p": 249.65, "y1p": 273.42}, "k_b2_kenshin_to": {"page": 0, "x0": 261, "x1": 311, "type": "text", "size": 7, "align": "center", "y0p": 249.65, "y1p": 273.42}, "k_b2_nissu": {"page": 0, "x0": 314, "x1": 369, "type": "text", "size": 9, "align": "center", "y0p": 249.65, "y1p": 273.42}, "k_b2_meisai_kingaku": {"page": 0, "x0": 373, "x1": 456, "type": "text", "size": 9, "align": "right", "y0p": 249.65, "y1p": 273.42}, "k_b2_kakunin_nengetsubi": {"page": 0, "x0": 469, "x1": 559, "type": "text", "size": 8, "align": "left", "y0p": 249.65, "y1p": 273.42}, "k_b2_denryoku_gas": {"page": 0, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 233.03, "y1p": 249.65}, "k_b2_jigyousho": {"page": 0, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 233.03, "y1p": 249.65}, "k_b2_denwa": {"page": 0, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 216.61, "y1p": 233.03}, "k_b2_operator": {"page": 0, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 216.61, "y1p": 233.03}, "k_b3_planmark_A": {"page": 1, "type": "mark", "cx": 124.7, "cy": 750.38}, "k_b3_planmark_B": {"page": 1, "type": "mark", "cx": 163.48, "cy": 750.38}, "k_b3_planmark_C": {"page": 1, "type": "mark", "cx": 202.26, "cy": 750.38}, "k_b3_planmark_other": {"page": 1, "type": "mark", "cx": 241.07, "cy": 750.38}, "k_b3_plan_other_text": {"page": 1, "x0": 265, "x1": 330, "type": "text", "size": 7, "align": "left", "y0p": 741.96, "y1p": 758.81}, "k_b3_genzai_plan": {"page": 1, "x0": 145, "x1": 330, "type": "text", "size": 8, "align": "left", "y0p": 725.34, "y1p": 741.96}, "k_b3_rikiritsu": {"page": 1, "x0": 335, "x1": 388, "type": "text", "size": 8, "align": "center", "y0p": 725.34, "y1p": 740.81}, "k_b3_keiyaku_youryou": {"page": 1, "x0": 393, "x1": 465, "type": "text", "size": 8, "align": "center", "y0p": 725.34, "y1p": 739.81}, "k_b3_keishubetsu_juryou": {"page": 1, "type": "mark", "cx": 474.67, "cy": 734.05}, "k_b3_keishubetsu_douryoku": {"page": 1, "type": "mark", "cx": 509.88, "cy": 734.05}, "k_b3_keishubetsu_gas": {"page": 1, "type": "mark", "cx": 545.08, "cy": 734.05}, "k_b3_moshikomi_doujou": {"page": 1, "type": "mark", "cx": 229.97, "cy": 763.99}, "k_b3_moshikomi_tsujou": {"page": 1, "type": "mark", "cx": 312.5, "cy": 763.99}, "k_b3_moshikomi_shinki": {"page": 1, "type": "mark", "cx": 357.51, "cy": 763.99}, "k_b3_moshikomi_saikeiyaku": {"page": 1, "type": "mark", "cx": 402.52, "cy": 763.99}, "k_b3_furigana": {"page": 1, "x0": 143, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 693.02, "y1p": 705.19}, "k_b3_keiyaku_meigi": {"page": 1, "x0": 122, "x1": 560, "type": "text", "size": 10, "align": "left", "y0p": 676.38, "y1p": 693.02}, "k_b3_customer_no": {"page": 1, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 659.75, "y1p": 676.38}, "k_b3_supply_no": {"page": 1, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 643.13, "y1p": 659.75}, "k_b3_address": {"page": 1, "x0": 122, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 620.63, "y1p": 643.13}, "k_b3_taisho_nengetsu": {"page": 1, "x0": 36, "x1": 119, "type": "text", "size": 8.5, "align": "left", "y0p": 581.85, "y1p": 605.62}, "k_b3_shiyouryou": {"page": 1, "x0": 121, "x1": 195, "type": "text", "size": 8, "align": "center", "y0p": 581.85, "y1p": 605.62}, "k_b3_kenshin_from": {"page": 1, "x0": 198, "x1": 249, "type": "text", "size": 7, "align": "center", "y0p": 581.85, "y1p": 605.62}, "k_b3_kenshin_to": {"page": 1, "x0": 261, "x1": 311, "type": "text", "size": 7, "align": "center", "y0p": 581.85, "y1p": 605.62}, "k_b3_nissu": {"page": 1, "x0": 314, "x1": 369, "type": "text", "size": 9, "align": "center", "y0p": 581.85, "y1p": 605.62}, "k_b3_meisai_kingaku": {"page": 1, "x0": 373, "x1": 456, "type": "text", "size": 9, "align": "right", "y0p": 581.85, "y1p": 605.62}, "k_b3_kakunin_nengetsubi": {"page": 1, "x0": 469, "x1": 559, "type": "text", "size": 8, "align": "left", "y0p": 581.85, "y1p": 605.62}, "k_b3_denryoku_gas": {"page": 1, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 565.23, "y1p": 581.85}, "k_b3_jigyousho": {"page": 1, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 565.23, "y1p": 581.85}, "k_b3_denwa": {"page": 1, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 548.81, "y1p": 565.23}, "k_b3_operator": {"page": 1, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 548.81, "y1p": 565.23}, "k_b4_planmark_A": {"page": 1, "type": "mark", "cx": 124.7, "cy": 518.68}, "k_b4_planmark_B": {"page": 1, "type": "mark", "cx": 163.48, "cy": 518.68}, "k_b4_planmark_C": {"page": 1, "type": "mark", "cx": 202.26, "cy": 518.68}, "k_b4_planmark_other": {"page": 1, "type": "mark", "cx": 241.07, "cy": 518.68}, "k_b4_plan_other_text": {"page": 1, "x0": 265, "x1": 330, "type": "text", "size": 7, "align": "left", "y0p": 510.26, "y1p": 527.11}, "k_b4_genzai_plan": {"page": 1, "x0": 145, "x1": 330, "type": "text", "size": 8, "align": "left", "y0p": 493.64, "y1p": 510.26}, "k_b4_rikiritsu": {"page": 1, "x0": 335, "x1": 388, "type": "text", "size": 8, "align": "center", "y0p": 493.64, "y1p": 509.11}, "k_b4_keiyaku_youryou": {"page": 1, "x0": 393, "x1": 465, "type": "text", "size": 8, "align": "center", "y0p": 493.64, "y1p": 508.11}, "k_b4_keishubetsu_juryou": {"page": 1, "type": "mark", "cx": 474.67, "cy": 502.37}, "k_b4_keishubetsu_douryoku": {"page": 1, "type": "mark", "cx": 509.88, "cy": 502.37}, "k_b4_keishubetsu_gas": {"page": 1, "type": "mark", "cx": 545.08, "cy": 502.37}, "k_b4_moshikomi_doujou": {"page": 1, "type": "mark", "cx": 229.97, "cy": 532.29}, "k_b4_moshikomi_tsujou": {"page": 1, "type": "mark", "cx": 312.5, "cy": 532.29}, "k_b4_moshikomi_shinki": {"page": 1, "type": "mark", "cx": 357.51, "cy": 532.29}, "k_b4_moshikomi_saikeiyaku": {"page": 1, "type": "mark", "cx": 402.52, "cy": 532.29}, "k_b4_furigana": {"page": 1, "x0": 143, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 461.32, "y1p": 473.49}, "k_b4_keiyaku_meigi": {"page": 1, "x0": 122, "x1": 560, "type": "text", "size": 10, "align": "left", "y0p": 444.68, "y1p": 461.32}, "k_b4_customer_no": {"page": 1, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 428.05, "y1p": 444.68}, "k_b4_supply_no": {"page": 1, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 411.43, "y1p": 428.05}, "k_b4_address": {"page": 1, "x0": 122, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 388.93, "y1p": 411.43}, "k_b4_taisho_nengetsu": {"page": 1, "x0": 36, "x1": 119, "type": "text", "size": 8.5, "align": "left", "y0p": 350.15, "y1p": 373.92}, "k_b4_shiyouryou": {"page": 1, "x0": 121, "x1": 195, "type": "text", "size": 8, "align": "center", "y0p": 350.15, "y1p": 373.92}, "k_b4_kenshin_from": {"page": 1, "x0": 198, "x1": 249, "type": "text", "size": 7, "align": "center", "y0p": 350.15, "y1p": 373.92}, "k_b4_kenshin_to": {"page": 1, "x0": 261, "x1": 311, "type": "text", "size": 7, "align": "center", "y0p": 350.15, "y1p": 373.92}, "k_b4_nissu": {"page": 1, "x0": 314, "x1": 369, "type": "text", "size": 9, "align": "center", "y0p": 350.15, "y1p": 373.92}, "k_b4_meisai_kingaku": {"page": 1, "x0": 373, "x1": 456, "type": "text", "size": 9, "align": "right", "y0p": 350.15, "y1p": 373.92}, "k_b4_kakunin_nengetsubi": {"page": 1, "x0": 469, "x1": 559, "type": "text", "size": 8, "align": "left", "y0p": 350.15, "y1p": 373.92}, "k_b4_denryoku_gas": {"page": 1, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 333.53, "y1p": 350.15}, "k_b4_jigyousho": {"page": 1, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 333.53, "y1p": 350.15}, "k_b4_denwa": {"page": 1, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 317.11, "y1p": 333.53}, "k_b4_operator": {"page": 1, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 317.11, "y1p": 333.53}, "k_b5_planmark_A": {"page": 1, "type": "mark", "cx": 124.7, "cy": 291.28}, "k_b5_planmark_B": {"page": 1, "type": "mark", "cx": 163.48, "cy": 291.28}, "k_b5_planmark_C": {"page": 1, "type": "mark", "cx": 202.26, "cy": 291.28}, "k_b5_planmark_other": {"page": 1, "type": "mark", "cx": 241.07, "cy": 291.28}, "k_b5_plan_other_text": {"page": 1, "x0": 265, "x1": 330, "type": "text", "size": 7, "align": "left", "y0p": 282.86, "y1p": 299.71}, "k_b5_genzai_plan": {"page": 1, "x0": 145, "x1": 330, "type": "text", "size": 8, "align": "left", "y0p": 266.24, "y1p": 282.86}, "k_b5_rikiritsu": {"page": 1, "x0": 335, "x1": 388, "type": "text", "size": 8, "align": "center", "y0p": 266.24, "y1p": 281.71}, "k_b5_keiyaku_youryou": {"page": 1, "x0": 393, "x1": 465, "type": "text", "size": 8, "align": "center", "y0p": 266.24, "y1p": 280.71}, "k_b5_keishubetsu_juryou": {"page": 1, "type": "mark", "cx": 474.67, "cy": 274.98}, "k_b5_keishubetsu_douryoku": {"page": 1, "type": "mark", "cx": 509.88, "cy": 274.98}, "k_b5_keishubetsu_gas": {"page": 1, "type": "mark", "cx": 545.08, "cy": 274.98}, "k_b5_moshikomi_doujou": {"page": 1, "type": "mark", "cx": 232.5, "cy": 304.89}, "k_b5_moshikomi_tsujou": {"page": 1, "type": "mark", "cx": 315.02, "cy": 304.89}, "k_b5_moshikomi_shinki": {"page": 1, "type": "mark", "cx": 360.04, "cy": 304.89}, "k_b5_moshikomi_saikeiyaku": {"page": 1, "type": "mark", "cx": 405.05, "cy": 304.89}, "k_b5_furigana": {"page": 1, "x0": 143, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 233.92, "y1p": 246.09}, "k_b5_keiyaku_meigi": {"page": 1, "x0": 122, "x1": 560, "type": "text", "size": 10, "align": "left", "y0p": 217.28, "y1p": 233.92}, "k_b5_customer_no": {"page": 1, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 200.65, "y1p": 217.28}, "k_b5_supply_no": {"page": 1, "type": "digits", "centers": [128.395, 147.785, 167.175, 186.565, 205.97, 225.375, 244.765, 264.15500000000003, 283.545, 302.945, 322.345, 341.735, 361.125, 380.515, 399.91999999999996, 419.325, 438.71500000000003, 458.11, 477.505, 496.905, 516.303, 535.693, 554.9449999999999], "y0p": 184.03, "y1p": 200.65}, "k_b5_address": {"page": 1, "x0": 122, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 161.53, "y1p": 184.03}, "k_b5_taisho_nengetsu": {"page": 1, "x0": 36, "x1": 119, "type": "text", "size": 8.5, "align": "left", "y0p": 122.75, "y1p": 146.52}, "k_b5_shiyouryou": {"page": 1, "x0": 121, "x1": 195, "type": "text", "size": 8, "align": "center", "y0p": 122.75, "y1p": 146.52}, "k_b5_kenshin_from": {"page": 1, "x0": 198, "x1": 249, "type": "text", "size": 7, "align": "center", "y0p": 122.75, "y1p": 146.52}, "k_b5_kenshin_to": {"page": 1, "x0": 261, "x1": 311, "type": "text", "size": 7, "align": "center", "y0p": 122.75, "y1p": 146.52}, "k_b5_nissu": {"page": 1, "x0": 314, "x1": 369, "type": "text", "size": 9, "align": "center", "y0p": 122.75, "y1p": 146.52}, "k_b5_meisai_kingaku": {"page": 1, "x0": 373, "x1": 456, "type": "text", "size": 9, "align": "right", "y0p": 122.75, "y1p": 146.52}, "k_b5_kakunin_nengetsubi": {"page": 1, "x0": 469, "x1": 559, "type": "text", "size": 8, "align": "left", "y0p": 122.75, "y1p": 146.52}, "k_b5_denryoku_gas": {"page": 1, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 106.13, "y1p": 122.75}, "k_b5_jigyousho": {"page": 1, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 106.13, "y1p": 122.75}, "k_b5_denwa": {"page": 1, "x0": 122, "x1": 291, "type": "text", "size": 8, "align": "left", "y0p": 89.71, "y1p": 106.13}, "k_b5_operator": {"page": 1, "x0": 412, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 89.71, "y1p": 106.13}, "k_keiyakusha": {"page": 0, "x0": 122, "x1": 535, "type": "text", "size": 10, "align": "left", "y0p": 695.09, "y1p": 711.39}, "k_tantousha": {"page": 0, "x0": 122, "x1": 535, "type": "text", "size": 10, "align": "left", "y0p": 677.79, "y1p": 694.49}, "k_signature": {"page": 0, "x0": 130, "x1": 460, "type": "text", "size": 11, "align": "left", "y0p": 170.89, "y1p": 192.89}, "k_hanko_note": {"page": 0, "x0": 460, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 170.89, "y1p": 192.89}, "k_hanbaiten": {"page": 0, "x0": 60, "x1": 275, "type": "text", "size": 8, "align": "left", "y0p": 138.89, "y1p": 151.89}, "k_hanbaiin": {"page": 0, "x0": 318, "x1": 560, "type": "text", "size": 8, "align": "left", "y0p": 138.89, "y1p": 151.89}, "k_biko_tsujou": {"page": 0, "type": "mark", "cx": 78.22, "cy": 119.68}, "k_biko_shinki": {"page": 0, "type": "mark", "cx": 120.35, "cy": 119.68}, "k_biko_saikeiyaku": {"page": 0, "type": "mark", "cx": 162.48, "cy": 119.68}, "k_biko_douitsu": {"page": 0, "type": "mark", "cx": 36.09, "cy": 105.92}};
-window.FIELDS_SHINDAN = {"s_keiyakusha": {"page": 0, "x0": 141.5526001586914, "x1": 339.3586001586914, "type": "text", "size": 11, "align": "left", "y0p": 658.54, "y1p": 683.39}, "s_tantousha": {"page": 0, "x0": 481.5006001586914, "x1": 573.9426001586914, "type": "text", "size": 11, "align": "left", "y0p": 658.54, "y1p": 683.39}, "s_kaisen_umu_yes": {"page": 0, "type": "mark", "cx": 282.2, "cy": 650.59}, "s_kaisen_umu_no": {"page": 0, "type": "mark", "cx": 333.39, "cy": 650.59}, "s_keiyaku_gaisha": {"page": 0, "x0": 277.7306001586914, "x1": 573.9426001586914, "type": "text", "size": 10, "align": "left", "y0p": 625.74, "y1p": 642.64}, "s_shiharai_kingaku": {"page": 0, "x0": 277.7306001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 609.83, "y1p": 625.74}, "s_b1_moshikomi_no": {"page": 0, "x0": 71.9726001586914, "x1": 275.7426001586914, "type": "text", "size": 9, "align": "left", "y0p": 574.05, "y1p": 589.95}, "s_b1_moshikomi_tsujou": {"page": 0, "type": "mark", "cx": 349.05, "cy": 582.0}, "s_b1_moshikomi_shinki": {"page": 0, "type": "mark", "cx": 383.34, "cy": 582.0}, "s_b1_moshikomi_saikeiyaku": {"page": 0, "type": "mark", "cx": 417.64, "cy": 582.0}, "s_b1_plan_A": {"page": 0, "type": "mark", "cx": 77.44, "cy": 565.85}, "s_b1_plan_B": {"page": 0, "type": "mark", "cx": 132.61, "cy": 565.85}, "s_b1_plan_C": {"page": 0, "type": "mark", "cx": 188.27, "cy": 565.85}, "s_b1_plan_other": {"page": 0, "type": "mark", "cx": 243.93, "cy": 565.85}, "s_b1_plan_other_text": {"page": 0, "x0": 276.73660015869143, "x1": 309.5386001586914, "type": "text", "size": 7, "align": "left", "y0p": 557.65, "y1p": 574.05}, "s_b1_rikiritsu": {"page": 0, "x0": 548.0986001586914, "x1": 569.4696001586914, "type": "text", "size": 8, "align": "right", "y0p": 557.65, "y1p": 574.05}, "s_b1_keiyaku_youryou": {"page": 0, "x0": 71.9726001586914, "x1": 206.6596001586914, "type": "text", "size": 9, "align": "center", "y0p": 541.25, "y1p": 557.65}, "s_b1_shubetsu_juryou": {"page": 0, "type": "mark", "cx": 349.05, "cy": 549.45}, "s_b1_shubetsu_douryoku": {"page": 0, "type": "mark", "cx": 391.3, "cy": 549.45}, "s_b1_shubetsu_gas": {"page": 0, "type": "mark", "cx": 433.54, "cy": 549.45}, "s_b1_genzai_plan": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 525.34, "y1p": 541.25}, "s_b1_furigana": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 508.45, "y1p": 525.34}, "s_b1_keiyaku_meigi": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 10, "align": "left", "y0p": 492.54, "y1p": 508.45}, "s_b1_customer_no": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 476.64, "y1p": 492.54}, "s_b1_supply_no": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 476.64, "y1p": 492.54}, "s_b1_taisho_nengetsu": {"page": 0, "x0": 71.9726001586914, "x1": 205.16860015869142, "type": "text", "size": 9, "align": "left", "y0p": 459.74, "y1p": 476.64}, "s_b1_shiyouryou": {"page": 0, "x0": 277.7306001586914, "x1": 408.93860015869143, "type": "text", "size": 9, "align": "center", "y0p": 459.74, "y1p": 476.64}, "s_b1_nissu": {"page": 0, "x0": 549.0926001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "center", "y0p": 459.74, "y1p": 476.64}, "s_b1_kenshin_period": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 443.84, "y1p": 459.74}, "s_b1_meisai_kingaku": {"page": 0, "x0": 71.9726001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 427.93, "y1p": 443.84}, "s_b1_denryoku_gas": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 390.16, "y1p": 406.06}, "s_b1_jigyousho": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 390.16, "y1p": 406.06}, "s_b1_denwa": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 374.26, "y1p": 390.16}, "s_b1_operator": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 374.26, "y1p": 390.16}, "s_b1_kakunin_nengetsubi": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 357.36, "y1p": 374.26}, "s_b2_moshikomi_no": {"page": 0, "x0": 71.9726001586914, "x1": 275.7426001586914, "type": "text", "size": 9, "align": "left", "y0p": 324.56, "y1p": 338.47}, "s_b2_moshikomi_tsujou": {"page": 0, "type": "mark", "cx": 349.05, "cy": 331.51}, "s_b2_moshikomi_shinki": {"page": 0, "type": "mark", "cx": 383.34, "cy": 331.51}, "s_b2_moshikomi_saikeiyaku": {"page": 0, "type": "mark", "cx": 417.64, "cy": 331.51}, "s_b2_plan_A": {"page": 0, "type": "mark", "cx": 77.44, "cy": 318.09}, "s_b2_plan_B": {"page": 0, "type": "mark", "cx": 132.61, "cy": 318.09}, "s_b2_plan_C": {"page": 0, "type": "mark", "cx": 188.27, "cy": 318.09}, "s_b2_plan_other": {"page": 0, "type": "mark", "cx": 243.93, "cy": 318.09}, "s_b2_plan_other_text": {"page": 0, "x0": 276.73660015869143, "x1": 309.5386001586914, "type": "text", "size": 7, "align": "left", "y0p": 311.63, "y1p": 324.56}, "s_b2_rikiritsu": {"page": 0, "x0": 548.0986001586914, "x1": 569.4696001586914, "type": "text", "size": 8, "align": "right", "y0p": 311.63, "y1p": 324.56}, "s_b2_keiyaku_youryou": {"page": 0, "x0": 71.9726001586914, "x1": 206.6596001586914, "type": "text", "size": 9, "align": "center", "y0p": 298.71, "y1p": 311.63}, "s_b2_shubetsu_juryou": {"page": 0, "type": "mark", "cx": 349.05, "cy": 305.17}, "s_b2_shubetsu_douryoku": {"page": 0, "type": "mark", "cx": 391.3, "cy": 305.17}, "s_b2_shubetsu_gas": {"page": 0, "type": "mark", "cx": 433.54, "cy": 305.17}, "s_b2_genzai_plan": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 285.79, "y1p": 298.71}, "s_b2_furigana": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 272.37, "y1p": 285.79}, "s_b2_keiyaku_meigi": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 10, "align": "left", "y0p": 258.95, "y1p": 272.37}, "s_b2_customer_no": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 246.03, "y1p": 258.95}, "s_b2_supply_no": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 246.03, "y1p": 258.95}, "s_b2_taisho_nengetsu": {"page": 0, "x0": 71.9726001586914, "x1": 205.16860015869142, "type": "text", "size": 9, "align": "left", "y0p": 233.11, "y1p": 246.03}, "s_b2_shiyouryou": {"page": 0, "x0": 277.7306001586914, "x1": 408.93860015869143, "type": "text", "size": 9, "align": "center", "y0p": 233.11, "y1p": 246.03}, "s_b2_nissu": {"page": 0, "x0": 549.0926001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "center", "y0p": 233.11, "y1p": 246.03}, "s_b2_kenshin_period": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 220.19, "y1p": 233.11}, "s_b2_meisai_kingaku": {"page": 0, "x0": 71.9726001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 206.27, "y1p": 220.19}, "s_b2_denryoku_gas": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 169.49, "y1p": 185.4}, "s_b2_jigyousho": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 169.49, "y1p": 185.4}, "s_b2_denwa": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 152.59, "y1p": 169.49}, "s_b2_operator": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 152.59, "y1p": 169.49}, "s_b2_kakunin_nengetsubi": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 136.69, "y1p": 152.59}, "s_b1_address": {"page": 0, "x0": 40, "x1": 560, "type": "text", "size": 9, "align": "left", "prefix": "①住所：", "y0p": 101.89, "y1p": 115.89}, "s_b2_address": {"page": 0, "x0": 40, "x1": 560, "type": "text", "size": 9, "align": "left", "prefix": "②住所：", "y0p": 81.89, "y1p": 95.89}};
+window.FIELDS_SHINDAN = {"s_keiyakusha": {"page": 0, "x0": 141.5526001586914, "x1": 339.3586001586914, "type": "text", "size": 11, "align": "left", "y0p": 658.54, "y1p": 683.39}, "s_tantousha": {"page": 0, "x0": 481.5006001586914, "x1": 573.9426001586914, "type": "text", "size": 11, "align": "left", "y0p": 658.54, "y1p": 683.39}, "s_kaisen_umu_yes": {"page": 0, "type": "mark", "cx": 282.2, "cy": 650.59}, "s_kaisen_umu_no": {"page": 0, "type": "mark", "cx": 333.39, "cy": 650.59}, "s_keiyaku_gaisha": {"page": 0, "x0": 277.7306001586914, "x1": 573.9426001586914, "type": "text", "size": 10, "align": "left", "y0p": 625.74, "y1p": 642.64}, "s_shiharai_kingaku": {"page": 0, "x0": 277.7306001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 609.83, "y1p": 625.74}, "s_b1_moshikomi_no": {"page": 0, "x0": 71.9726001586914, "x1": 275.7426001586914, "type": "text", "size": 9, "align": "left", "y0p": 574.05, "y1p": 589.95}, "s_b1_moshikomi_tsujou": {"page": 0, "type": "mark", "cx": 349.05, "cy": 582.0}, "s_b1_moshikomi_shinki": {"page": 0, "type": "mark", "cx": 383.34, "cy": 582.0}, "s_b1_moshikomi_saikeiyaku": {"page": 0, "type": "mark", "cx": 417.64, "cy": 582.0}, "s_b1_plan_A": {"page": 0, "type": "mark", "cx": 77.44, "cy": 565.85}, "s_b1_plan_B": {"page": 0, "type": "mark", "cx": 132.61, "cy": 565.85}, "s_b1_plan_C": {"page": 0, "type": "mark", "cx": 188.27, "cy": 565.85}, "s_b1_plan_other": {"page": 0, "type": "mark", "cx": 243.93, "cy": 565.85}, "s_b1_plan_other_text": {"page": 0, "x0": 276.73660015869143, "x1": 309.5386001586914, "type": "text", "size": 7, "align": "left", "y0p": 557.65, "y1p": 574.05}, "s_b1_rikiritsu": {"page": 0, "x0": 548.0986001586914, "x1": 569.4696001586914, "type": "text", "size": 8, "align": "right", "y0p": 557.65, "y1p": 574.05}, "s_b1_keiyaku_youryou": {"page": 0, "x0": 71.9726001586914, "x1": 206.6596001586914, "type": "text", "size": 9, "align": "center", "y0p": 541.25, "y1p": 557.65}, "s_b1_shubetsu_juryou": {"page": 0, "type": "mark", "cx": 349.05, "cy": 549.45}, "s_b1_shubetsu_douryoku": {"page": 0, "type": "mark", "cx": 391.3, "cy": 549.45}, "s_b1_shubetsu_gas": {"page": 0, "type": "mark", "cx": 433.54, "cy": 549.45}, "s_b1_genzai_plan": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 525.34, "y1p": 541.25}, "s_b1_furigana": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 508.45, "y1p": 525.34}, "s_b1_keiyaku_meigi": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 10, "align": "left", "y0p": 492.54, "y1p": 508.45}, "s_b1_customer_no": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 476.64, "y1p": 492.54}, "s_b1_supply_no": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 476.64, "y1p": 492.54}, "s_b1_taisho_nengetsu": {"page": 0, "x0": 71.9726001586914, "x1": 205.16860015869142, "type": "text", "size": 9, "align": "left", "y0p": 459.74, "y1p": 476.64}, "s_b1_shiyouryou": {"page": 0, "x0": 277.7306001586914, "x1": 408.93860015869143, "type": "text", "size": 9, "align": "center", "y0p": 459.74, "y1p": 476.64}, "s_b1_nissu": {"page": 0, "x0": 549.0926001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "center", "y0p": 459.74, "y1p": 476.64}, "s_b1_kenshin_period": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 443.84, "y1p": 459.74}, "s_b1_meisai_kingaku": {"page": 0, "x0": 71.9726001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 427.93, "y1p": 443.84}, "s_b1_denryoku_gas": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 390.16, "y1p": 406.06}, "s_b1_jigyousho": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 390.16, "y1p": 406.06}, "s_b1_denwa": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 374.26, "y1p": 390.16}, "s_b1_operator": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 374.26, "y1p": 390.16}, "s_b1_kakunin_nengetsubi": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 357.36, "y1p": 374.26}, "s_b2_moshikomi_no": {"page": 0, "x0": 71.9726001586914, "x1": 275.7426001586914, "type": "text", "size": 9, "align": "left", "y0p": 324.56, "y1p": 338.47}, "s_b2_moshikomi_tsujou": {"page": 0, "type": "mark", "cx": 349.05, "cy": 331.51}, "s_b2_moshikomi_shinki": {"page": 0, "type": "mark", "cx": 383.34, "cy": 331.51}, "s_b2_moshikomi_saikeiyaku": {"page": 0, "type": "mark", "cx": 417.64, "cy": 331.51}, "s_b2_plan_A": {"page": 0, "type": "mark", "cx": 77.44, "cy": 318.09}, "s_b2_plan_B": {"page": 0, "type": "mark", "cx": 132.61, "cy": 318.09}, "s_b2_plan_C": {"page": 0, "type": "mark", "cx": 188.27, "cy": 318.09}, "s_b2_plan_other": {"page": 0, "type": "mark", "cx": 243.93, "cy": 318.09}, "s_b2_plan_other_text": {"page": 0, "x0": 276.73660015869143, "x1": 309.5386001586914, "type": "text", "size": 7, "align": "left", "y0p": 311.63, "y1p": 324.56}, "s_b2_rikiritsu": {"page": 0, "x0": 548.0986001586914, "x1": 569.4696001586914, "type": "text", "size": 8, "align": "right", "y0p": 311.63, "y1p": 324.56}, "s_b2_keiyaku_youryou": {"page": 0, "x0": 71.9726001586914, "x1": 206.6596001586914, "type": "text", "size": 9, "align": "center", "y0p": 298.71, "y1p": 311.63}, "s_b2_shubetsu_juryou": {"page": 0, "type": "mark", "cx": 349.05, "cy": 305.17}, "s_b2_shubetsu_douryoku": {"page": 0, "type": "mark", "cx": 391.3, "cy": 305.17}, "s_b2_shubetsu_gas": {"page": 0, "type": "mark", "cx": 433.54, "cy": 305.17}, "s_b2_genzai_plan": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 285.79, "y1p": 298.71}, "s_b2_furigana": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 272.37, "y1p": 285.79}, "s_b2_keiyaku_meigi": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 10, "align": "left", "y0p": 258.95, "y1p": 272.37}, "s_b2_customer_no": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 246.03, "y1p": 258.95}, "s_b2_supply_no": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 246.03, "y1p": 258.95}, "s_b2_taisho_nengetsu": {"page": 0, "x0": 71.9726001586914, "x1": 205.16860015869142, "type": "text", "size": 9, "align": "left", "y0p": 233.11, "y1p": 246.03}, "s_b2_shiyouryou": {"page": 0, "x0": 277.7306001586914, "x1": 408.93860015869143, "type": "text", "size": 9, "align": "center", "y0p": 233.11, "y1p": 246.03}, "s_b2_nissu": {"page": 0, "x0": 549.0926001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "center", "y0p": 233.11, "y1p": 246.03}, "s_b2_kenshin_period": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 220.19, "y1p": 233.11}, "s_b2_meisai_kingaku": {"page": 0, "x0": 71.9726001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 206.27, "y1p": 220.19}, "s_b2_denryoku_gas": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 169.49, "y1p": 185.4}, "s_b2_jigyousho": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 169.49, "y1p": 185.4}, "s_b2_denwa": {"page": 0, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 152.59, "y1p": 169.49}, "s_b2_operator": {"page": 0, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 152.59, "y1p": 169.49}, "s_b2_kakunin_nengetsubi": {"page": 0, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 136.69, "y1p": 152.59}, "s_b1_address": {"page": 0, "x0": 40, "x1": 560, "type": "text", "size": 9, "align": "left", "prefix": "①住所：", "y0p": 101.89, "y1p": 115.89}, "s_b2_address": {"page": 0, "x0": 40, "x1": 560, "type": "text", "size": 9, "align": "left", "prefix": "②住所：", "y0p": 81.89, "y1p": 95.89}, "s_b3_moshikomi_no": {"page": 1, "x0": 71.9726001586914, "x1": 275.7426001586914, "type": "text", "size": 9, "align": "left", "y0p": 574.05, "y1p": 589.95}, "s_b3_moshikomi_tsujou": {"page": 1, "type": "mark", "cx": 349.05, "cy": 582.0}, "s_b3_moshikomi_shinki": {"page": 1, "type": "mark", "cx": 383.34, "cy": 582.0}, "s_b3_moshikomi_saikeiyaku": {"page": 1, "type": "mark", "cx": 417.64, "cy": 582.0}, "s_b3_plan_A": {"page": 1, "type": "mark", "cx": 77.44, "cy": 565.85}, "s_b3_plan_B": {"page": 1, "type": "mark", "cx": 132.61, "cy": 565.85}, "s_b3_plan_C": {"page": 1, "type": "mark", "cx": 188.27, "cy": 565.85}, "s_b3_plan_other": {"page": 1, "type": "mark", "cx": 243.93, "cy": 565.85}, "s_b3_plan_other_text": {"page": 1, "x0": 276.73660015869143, "x1": 309.5386001586914, "type": "text", "size": 7, "align": "left", "y0p": 557.65, "y1p": 574.05}, "s_b3_rikiritsu": {"page": 1, "x0": 548.0986001586914, "x1": 569.4696001586914, "type": "text", "size": 8, "align": "right", "y0p": 557.65, "y1p": 574.05}, "s_b3_keiyaku_youryou": {"page": 1, "x0": 71.9726001586914, "x1": 206.6596001586914, "type": "text", "size": 9, "align": "center", "y0p": 541.25, "y1p": 557.65}, "s_b3_shubetsu_juryou": {"page": 1, "type": "mark", "cx": 349.05, "cy": 549.45}, "s_b3_shubetsu_douryoku": {"page": 1, "type": "mark", "cx": 391.3, "cy": 549.45}, "s_b3_shubetsu_gas": {"page": 1, "type": "mark", "cx": 433.54, "cy": 549.45}, "s_b3_genzai_plan": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 525.34, "y1p": 541.25}, "s_b3_furigana": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 508.45, "y1p": 525.34}, "s_b3_keiyaku_meigi": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 10, "align": "left", "y0p": 492.54, "y1p": 508.45}, "s_b3_customer_no": {"page": 1, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 476.64, "y1p": 492.54}, "s_b3_supply_no": {"page": 1, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 476.64, "y1p": 492.54}, "s_b3_taisho_nengetsu": {"page": 1, "x0": 71.9726001586914, "x1": 205.16860015869142, "type": "text", "size": 9, "align": "left", "y0p": 459.74, "y1p": 476.64}, "s_b3_shiyouryou": {"page": 1, "x0": 277.7306001586914, "x1": 408.93860015869143, "type": "text", "size": 9, "align": "center", "y0p": 459.74, "y1p": 476.64}, "s_b3_nissu": {"page": 1, "x0": 549.0926001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "center", "y0p": 459.74, "y1p": 476.64}, "s_b3_kenshin_period": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 443.84, "y1p": 459.74}, "s_b3_meisai_kingaku": {"page": 1, "x0": 71.9726001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 427.93, "y1p": 443.84}, "s_b3_denryoku_gas": {"page": 1, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 390.16, "y1p": 406.06}, "s_b3_jigyousho": {"page": 1, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 390.16, "y1p": 406.06}, "s_b3_denwa": {"page": 1, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 374.26, "y1p": 390.16}, "s_b3_operator": {"page": 1, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 374.26, "y1p": 390.16}, "s_b3_kakunin_nengetsubi": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 357.36, "y1p": 374.26}, "s_b3_address": {"page": 1, "x0": 40, "x1": 560, "type": "text", "size": 9, "align": "left", "prefix": "③住所：", "y0p": 101.89, "y1p": 115.89}, "s_b4_moshikomi_no": {"page": 1, "x0": 71.9726001586914, "x1": 275.7426001586914, "type": "text", "size": 9, "align": "left", "y0p": 324.56, "y1p": 338.47}, "s_b4_moshikomi_tsujou": {"page": 1, "type": "mark", "cx": 349.05, "cy": 331.51}, "s_b4_moshikomi_shinki": {"page": 1, "type": "mark", "cx": 383.34, "cy": 331.51}, "s_b4_moshikomi_saikeiyaku": {"page": 1, "type": "mark", "cx": 417.64, "cy": 331.51}, "s_b4_plan_A": {"page": 1, "type": "mark", "cx": 77.44, "cy": 318.09}, "s_b4_plan_B": {"page": 1, "type": "mark", "cx": 132.61, "cy": 318.09}, "s_b4_plan_C": {"page": 1, "type": "mark", "cx": 188.27, "cy": 318.09}, "s_b4_plan_other": {"page": 1, "type": "mark", "cx": 243.93, "cy": 318.09}, "s_b4_plan_other_text": {"page": 1, "x0": 276.73660015869143, "x1": 309.5386001586914, "type": "text", "size": 7, "align": "left", "y0p": 311.63, "y1p": 324.56}, "s_b4_rikiritsu": {"page": 1, "x0": 548.0986001586914, "x1": 569.4696001586914, "type": "text", "size": 8, "align": "right", "y0p": 311.63, "y1p": 324.56}, "s_b4_keiyaku_youryou": {"page": 1, "x0": 71.9726001586914, "x1": 206.6596001586914, "type": "text", "size": 9, "align": "center", "y0p": 298.71, "y1p": 311.63}, "s_b4_shubetsu_juryou": {"page": 1, "type": "mark", "cx": 349.05, "cy": 305.17}, "s_b4_shubetsu_douryoku": {"page": 1, "type": "mark", "cx": 391.3, "cy": 305.17}, "s_b4_shubetsu_gas": {"page": 1, "type": "mark", "cx": 433.54, "cy": 305.17}, "s_b4_genzai_plan": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 285.79, "y1p": 298.71}, "s_b4_furigana": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 272.37, "y1p": 285.79}, "s_b4_keiyaku_meigi": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 10, "align": "left", "y0p": 258.95, "y1p": 272.37}, "s_b4_customer_no": {"page": 1, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 246.03, "y1p": 258.95}, "s_b4_supply_no": {"page": 1, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 246.03, "y1p": 258.95}, "s_b4_taisho_nengetsu": {"page": 1, "x0": 71.9726001586914, "x1": 205.16860015869142, "type": "text", "size": 9, "align": "left", "y0p": 233.11, "y1p": 246.03}, "s_b4_shiyouryou": {"page": 1, "x0": 277.7306001586914, "x1": 408.93860015869143, "type": "text", "size": 9, "align": "center", "y0p": 233.11, "y1p": 246.03}, "s_b4_nissu": {"page": 1, "x0": 549.0926001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "center", "y0p": 233.11, "y1p": 246.03}, "s_b4_kenshin_period": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 220.19, "y1p": 233.11}, "s_b4_meisai_kingaku": {"page": 1, "x0": 71.9726001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 206.27, "y1p": 220.19}, "s_b4_denryoku_gas": {"page": 1, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 169.49, "y1p": 185.4}, "s_b4_jigyousho": {"page": 1, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 169.49, "y1p": 185.4}, "s_b4_denwa": {"page": 1, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 152.59, "y1p": 169.49}, "s_b4_operator": {"page": 1, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 152.59, "y1p": 169.49}, "s_b4_kakunin_nengetsubi": {"page": 1, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 136.69, "y1p": 152.59}, "s_b4_address": {"page": 1, "x0": 40, "x1": 560, "type": "text", "size": 9, "align": "left", "prefix": "④住所：", "y0p": 81.89, "y1p": 95.89}, "s_b5_moshikomi_no": {"page": 2, "x0": 71.9726001586914, "x1": 275.7426001586914, "type": "text", "size": 9, "align": "left", "y0p": 574.05, "y1p": 589.95}, "s_b5_moshikomi_tsujou": {"page": 2, "type": "mark", "cx": 349.05, "cy": 582.0}, "s_b5_moshikomi_shinki": {"page": 2, "type": "mark", "cx": 383.34, "cy": 582.0}, "s_b5_moshikomi_saikeiyaku": {"page": 2, "type": "mark", "cx": 417.64, "cy": 582.0}, "s_b5_plan_A": {"page": 2, "type": "mark", "cx": 77.44, "cy": 565.85}, "s_b5_plan_B": {"page": 2, "type": "mark", "cx": 132.61, "cy": 565.85}, "s_b5_plan_C": {"page": 2, "type": "mark", "cx": 188.27, "cy": 565.85}, "s_b5_plan_other": {"page": 2, "type": "mark", "cx": 243.93, "cy": 565.85}, "s_b5_plan_other_text": {"page": 2, "x0": 276.73660015869143, "x1": 309.5386001586914, "type": "text", "size": 7, "align": "left", "y0p": 557.65, "y1p": 574.05}, "s_b5_rikiritsu": {"page": 2, "x0": 548.0986001586914, "x1": 569.4696001586914, "type": "text", "size": 8, "align": "right", "y0p": 557.65, "y1p": 574.05}, "s_b5_keiyaku_youryou": {"page": 2, "x0": 71.9726001586914, "x1": 206.6596001586914, "type": "text", "size": 9, "align": "center", "y0p": 541.25, "y1p": 557.65}, "s_b5_shubetsu_juryou": {"page": 2, "type": "mark", "cx": 349.05, "cy": 549.45}, "s_b5_shubetsu_douryoku": {"page": 2, "type": "mark", "cx": 391.3, "cy": 549.45}, "s_b5_shubetsu_gas": {"page": 2, "type": "mark", "cx": 433.54, "cy": 549.45}, "s_b5_genzai_plan": {"page": 2, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 525.34, "y1p": 541.25}, "s_b5_furigana": {"page": 2, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 508.45, "y1p": 525.34}, "s_b5_keiyaku_meigi": {"page": 2, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 10, "align": "left", "y0p": 492.54, "y1p": 508.45}, "s_b5_customer_no": {"page": 2, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 476.64, "y1p": 492.54}, "s_b5_supply_no": {"page": 2, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 476.64, "y1p": 492.54}, "s_b5_taisho_nengetsu": {"page": 2, "x0": 71.9726001586914, "x1": 205.16860015869142, "type": "text", "size": 9, "align": "left", "y0p": 459.74, "y1p": 476.64}, "s_b5_shiyouryou": {"page": 2, "x0": 277.7306001586914, "x1": 408.93860015869143, "type": "text", "size": 9, "align": "center", "y0p": 459.74, "y1p": 476.64}, "s_b5_nissu": {"page": 2, "x0": 549.0926001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "center", "y0p": 459.74, "y1p": 476.64}, "s_b5_kenshin_period": {"page": 2, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 443.84, "y1p": 459.74}, "s_b5_meisai_kingaku": {"page": 2, "x0": 71.9726001586914, "x1": 544.6196001586914, "type": "text", "size": 10, "align": "right", "y0p": 427.93, "y1p": 443.84}, "s_b5_denryoku_gas": {"page": 2, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 390.16, "y1p": 406.06}, "s_b5_jigyousho": {"page": 2, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 390.16, "y1p": 406.06}, "s_b5_denwa": {"page": 2, "x0": 71.9726001586914, "x1": 273.7546001586914, "type": "text", "size": 9, "align": "left", "y0p": 374.26, "y1p": 390.16}, "s_b5_operator": {"page": 2, "x0": 343.3346001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 374.26, "y1p": 390.16}, "s_b5_kakunin_nengetsubi": {"page": 2, "x0": 71.9726001586914, "x1": 574.4396001586914, "type": "text", "size": 9, "align": "left", "y0p": 357.36, "y1p": 374.26}, "s_b5_address": {"page": 2, "x0": 40, "x1": 560, "type": "text", "size": 9, "align": "left", "prefix": "⑤住所：", "y0p": 101.89, "y1p": 115.89}};
 
 </script>
 
@@ -659,6 +722,163 @@ function wideTextField(id, label, placeholder, required) {
   return `<div class="field wide" data-field="${id}"><label>${label}${reqMark(required)}</label>
     <input type="text" id="${id}" ${placeholder ? `placeholder="${placeholder}"` : ''}></div>`;
 }
+function readonlyTextField(id, label, placeholder) {
+  return `<div class="field" data-field="${id}"><label>${label}</label>
+    <input type="text" id="${id}" readonly ${placeholder ? `placeholder="${placeholder}"` : ''}></div>`;
+}
+function textFieldUnit(id, label, placeholder, required, unitId, defaultUnit) {
+  return `<div class="field" data-field="${id}"><label>${label}${reqMark(required)}</label>
+    <div class="input-with-suffix">
+      <input type="text" id="${id}" ${placeholder ? `placeholder="${placeholder}"` : ''}>
+      <span class="input-suffix" id="${unitId}">${defaultUnit || ''}</span>
+    </div></div>`;
+}
+
+/* ===================== Date dropdown helpers =====================
+ * 対象年月・確認日時・検針期間 are entered via <select> dropdowns instead of
+ * free text, both to prevent typos and to let 日数 be calculated automatically.
+ */
+const DATE_YEAR_MIN = new Date().getFullYear() - 3;
+const DATE_YEAR_MAX = new Date().getFullYear() + 3;
+
+function yearOptionsHTML() {
+  let opts = '<option value="">年</option>';
+  for (let y = DATE_YEAR_MIN; y <= DATE_YEAR_MAX; y++) opts += `<option value="${y}">${y}</option>`;
+  return opts;
+}
+function monthOptionsHTML() {
+  let opts = '<option value="">月</option>';
+  for (let m = 1; m <= 12; m++) opts += `<option value="${m}">${m}</option>`;
+  return opts;
+}
+function dayOptionsHTML() {
+  let opts = '<option value="">日</option>';
+  for (let d = 1; d <= 31; d++) opts += `<option value="${d}">${d}</option>`;
+  return opts;
+}
+
+function yearMonthField(idPrefix, label, required) {
+  return `<div class="field" data-field="${idPrefix}">
+    <label>${label}${reqMark(required)}</label>
+    <div class="date-group">
+      <select id="${idPrefix}_y">${yearOptionsHTML()}</select><span class="date-unit">年</span>
+      <select id="${idPrefix}_m">${monthOptionsHTML()}</select><span class="date-unit">月</span>
+    </div></div>`;
+}
+
+function fullDateFieldInner(idPrefix) {
+  return `<select id="${idPrefix}_y">${yearOptionsHTML()}</select><span class="date-unit">年</span>
+    <select id="${idPrefix}_m">${monthOptionsHTML()}</select><span class="date-unit">月</span>
+    <select id="${idPrefix}_d">${dayOptionsHTML()}</select><span class="date-unit">日</span>`;
+}
+
+function fullDateField(idPrefix, label, required) {
+  return `<div class="field" data-field="${idPrefix}">
+    <label>${label}${reqMark(required)}</label>
+    <div class="date-group">${fullDateFieldInner(idPrefix)}</div></div>`;
+}
+
+function dateRangeField(fromPrefix, toPrefix, label, required) {
+  return `<div class="field wide" data-field="${fromPrefix}">
+    <label>${label}${reqMark(required)}</label>
+    <div class="date-range-group">
+      <div class="date-group">${fullDateFieldInner(fromPrefix)}</div>
+      <span class="date-range-tilde">～</span>
+      <div class="date-group">${fullDateFieldInner(toPrefix)}</div>
+    </div></div>`;
+}
+
+function dateParts(idPrefix) {
+  const y = document.getElementById(idPrefix + '_y')?.value;
+  const m = document.getElementById(idPrefix + '_m')?.value;
+  const d = document.getElementById(idPrefix + '_d')?.value;
+  return { y, m, d };
+}
+
+function yearMonthValue(idPrefix) {
+  const { y, m } = dateParts(idPrefix);
+  return (y && m) ? `${y}年${m}月` : '';
+}
+
+function fullDateValue(idPrefix) {
+  const { y, m, d } = dateParts(idPrefix);
+  return (y && m && d) ? `${y}年${m}月${d}日` : '';
+}
+
+function monthDayValue(idPrefix) {
+  const { m, d } = dateParts(idPrefix);
+  return (m && d) ? `${m}/${d}` : '';
+}
+
+function isDateComplete(idPrefix, needDay) {
+  const p = dateParts(idPrefix);
+  return needDay ? !!(p.y && p.m && p.d) : !!(p.y && p.m);
+}
+
+// Auto-calculate 日数 (inclusive of both the start and end date) whenever the
+// 検針期間 start/end dropdowns change.
+function wireDaysAutoCalc(fromPrefix, toPrefix, daysFieldId) {
+  const recompute = () => {
+    const from = dateParts(fromPrefix), to = dateParts(toPrefix);
+    const field = document.getElementById(daysFieldId);
+    if (!field) return;
+    if (!(from.y && from.m && from.d && to.y && to.m && to.d)) {
+      field.value = '';
+      return;
+    }
+    const d1 = new Date(Number(from.y), Number(from.m) - 1, Number(from.d));
+    const d2 = new Date(Number(to.y), Number(to.m) - 1, Number(to.d));
+    const days = Math.round((d2 - d1) / 86400000) + 1;
+    field.value = days > 0 ? String(days) : '';
+    field.closest('.field')?.classList.remove('invalid');
+  };
+  ['_y', '_m', '_d'].forEach(suffix => {
+    document.getElementById(fromPrefix + suffix)?.addEventListener('change', recompute);
+    document.getElementById(toPrefix + suffix)?.addEventListener('change', recompute);
+  });
+}
+
+// 力率 only applies to 動力 (three-phase power) contracts — disable/clear it
+// otherwise, and only require it when 動力 is selected.
+function wireRikiritsuGate(shubetsuName, rikiritsuId) {
+  const input = document.getElementById(rikiritsuId);
+  if (!input) return;
+  const apply = () => {
+    const val = checkedValue(shubetsuName);
+    if (val === 'douryoku') {
+      input.disabled = false;
+    } else {
+      input.disabled = true;
+      input.value = '';
+      input.closest('.field')?.classList.remove('invalid');
+    }
+  };
+  document.querySelectorAll(`input[name="${shubetsuName}"]`).forEach(r => r.addEventListener('change', apply));
+  apply();
+}
+
+// 使用量の単位は契約種別で切り替える：従量/動力＝kWh、ガス＝㎥
+function wireUsageUnit(shubetsuName, unitSpanId) {
+  const span = document.getElementById(unitSpanId);
+  if (!span) return;
+  const apply = () => {
+    const val = checkedValue(shubetsuName);
+    span.textContent = val === 'gas' ? '㎥' : 'kWh';
+  };
+  document.querySelectorAll(`input[name="${shubetsuName}"]`).forEach(r => r.addEventListener('change', apply));
+  apply();
+}
+
+// Auto-insert thousands separators as the user types into a money field.
+function wireThousandsFormatter(id) {
+  const input = document.getElementById(id);
+  if (!input) return;
+  input.addEventListener('input', () => {
+    const digits = input.value.replace(/[^\d]/g, '');
+    input.value = digits ? Number(digits).toLocaleString('ja-JP') : '';
+  });
+}
+wireThousandsFormatter('s_shiharai_kingaku');
 
 /* ===================== Document A: 検針内容確認シート ===================== */
 let kBlockCount = 1;
@@ -695,7 +915,7 @@ function kBlockHTML(n) {
     <div class="row">
       ${textField(p + 'plan_other_text', 'その他プラン名（その他選択時のみ必須）')}
       ${textField(p + 'genzai_plan', '現在のプラン名', null, true)}
-      ${textField(p + 'rikiritsu', '力率（％）', '例: 95', true)}
+      ${textFieldUnit(p + 'rikiritsu', '力率（動力選択時のみ必須）', '例: 95', false, p + 'rikiritsu_unit', '%')}
       ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30', true)}
     </div>
     <div class="row">
@@ -725,15 +945,16 @@ function kBlockHTML(n) {
 
     <div class="section-title">検針・明細情報</div>
     <div class="row">
-      ${textField(p + 'taisho_nengetsu', '対象年月', '例: 2024年5月', true)}
-      ${textField(p + 'shiyouryou', '使用量（kWh・㎥）', '例: 350', true)}
-      ${textField(p + 'nissu', '日数', '例: 31', true)}
+      ${yearMonthField(p + 'taisho', '対象年月', true)}
+      ${textFieldUnit(p + 'shiyouryou', '使用量', '例: 350', true, p + 'shiyouryou_unit', 'kWh')}
+      ${readonlyTextField(p + 'nissu', '日数（検針期間から自動計算）')}
     </div>
     <div class="row">
-      ${textField(p + 'kenshin_from', '検針期間（開始）', '例: 5/1', true)}
-      ${textField(p + 'kenshin_to', '検針期間（終了）', '例: 5/31', true)}
-      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12,345', true)}
-      ${textField(p + 'kakunin_nengetsubi', '確認日時', '例: 2024年6月1日', true)}
+      ${dateRangeField(p + 'kenshin_from', p + 'kenshin_to', '検針期間', true)}
+    </div>
+    <div class="row">
+      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12345', true)}
+      ${fullDateField(p + 'kakunin', '確認日時', true)}
     </div>
     <div class="row">
       ${textField(p + 'denryoku_gas', '電力会社/ガス会社', null, true)}
@@ -746,17 +967,29 @@ function kBlockHTML(n) {
   </fieldset>`;
 }
 
+function wireKBlockDynamicFields(n) {
+  const p = `k_b${n}_`;
+  wireRikiritsuGate(p + 'keishubetsu', p + 'rikiritsu');
+  wireUsageUnit(p + 'keishubetsu', p + 'shiyouryou_unit');
+  wireDaysAutoCalc(p + 'kenshin_from', p + 'kenshin_to', p + 'nissu');
+  wireThousandsFormatter(p + 'meisai_kingaku');
+}
+
 function renderKBlocks() {
   // Initial render only. Appends, never clears — clearing would wipe out
   // any values already typed into earlier blocks.
   const wrap = document.getElementById('k_blocks');
-  for (let n = 1; n <= kBlockCount; n++) wrap.appendChild(el(kBlockHTML(n)));
+  for (let n = 1; n <= kBlockCount; n++) {
+    wrap.appendChild(el(kBlockHTML(n)));
+    wireKBlockDynamicFields(n);
+  }
   document.getElementById('k_addBlockWrap').classList.toggle('hidden', kBlockCount >= K_MAX);
 }
 document.getElementById('k_addBlock').addEventListener('click', () => {
   if (kBlockCount < K_MAX) {
     kBlockCount++;
     document.getElementById('k_blocks').appendChild(el(kBlockHTML(kBlockCount)));
+    wireKBlockDynamicFields(kBlockCount);
     document.getElementById('k_addBlockWrap').classList.toggle('hidden', kBlockCount >= K_MAX);
   }
 });
@@ -783,6 +1016,22 @@ function collectKenshinValues() {
       const ms = document.querySelector(`input[name="${p}moshikomi_shubetsu"]:checked`);
       if (ms && ms.value) values[p + 'moshikomi_' + ms.value] = true;
     }
+
+    // Dropdown-based date fields, combined into the plain strings the PDF/canvas drawers expect.
+    values[p + 'taisho_nengetsu'] = yearMonthValue(p + 'taisho');
+    values[p + 'kakunin_nengetsubi'] = fullDateValue(p + 'kakunin');
+    values[p + 'kenshin_from'] = monthDayValue(p + 'kenshin_from');
+    values[p + 'kenshin_to'] = monthDayValue(p + 'kenshin_to');
+
+    // 力率: the original template has no printed "%", so append it here.
+    // (診断シート's template already prints "%", so this is Document A only.)
+    if (values[p + 'rikiritsu']) values[p + 'rikiritsu'] = values[p + 'rikiritsu'].replace(/%$/, '') + '%';
+
+    // 使用量: append the unit that matches the selected 契約種別 (kWh or ㎥).
+    if (values[p + 'shiyouryou']) {
+      const unit = (ks && ks.value === 'gas') ? '㎥' : 'kWh';
+      values[p + 'shiyouryou'] = values[p + 'shiyouryou'].replace(/(kWh|㎥)$/, '') + unit;
+    }
   }
   const biko = document.querySelector('input[name="k_biko_shubetsu"]:checked');
   if (biko && biko.value) values['k_biko_' + biko.value] = true;
@@ -793,13 +1042,17 @@ function collectKenshinValues() {
 
 /* ===================== Document B: 診断シート ===================== */
 let sBlockCount = 1;
-const S_MAX = 2;
+const S_MAX = 5;
+// 診断シートのテンプレートは①②の2契約分しか印刷されていないため、③件目以降は
+// 同じレイアウトのページを複製し、丸数字だけ描き直して増やす（下の
+// shindanPageCount / decorateShindanExtraPage を参照）。
+const CIRCLED_LABEL = { 1: '①', 2: '②', 3: '③', 4: '④', 5: '⑤' };
 
 function sBlockHTML(n) {
   const p = `s_b${n}_`;
   return `
   <fieldset class="block-fs">
-    <legend>${n === 1 ? '①（必須）' : '②'}</legend>
+    <legend>${CIRCLED_LABEL[n]}${n === 1 ? '（必須）' : ''}</legend>
     <div class="row">
       ${textField(p + 'moshikomi_no', '申込番号', null, true)}
       <div class="field" data-group="${p}moshikomi_shubetsu">
@@ -825,7 +1078,7 @@ function sBlockHTML(n) {
     </div>
     <div class="row">
       ${textField(p + 'plan_other_text', 'その他プラン名（その他選択時のみ必須）')}
-      ${textField(p + 'rikiritsu', '力率（％）', '例: 95', true)}
+      ${textFieldUnit(p + 'rikiritsu', '力率（動力選択時のみ必須）', '例: 95', false, p + 'rikiritsu_unit', '%')}
       ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30', true)}
     </div>
     <div class="row">
@@ -851,21 +1104,21 @@ function sBlockHTML(n) {
       ${textField(p + 'supply_no', '供給地点特定番号', null, true)}
     </div>
     <div class="row">
-      ${wideTextField(p + 'address', '契約使用場所住所（任意・PDF下部の余白に「' + (n === 1 ? '①' : '②') + '住所：」として記載されます）')}
+      ${wideTextField(p + 'address', '契約使用場所住所（任意・PDF下部の余白に「' + CIRCLED_LABEL[n] + '住所：」として記載されます）')}
     </div>
 
     <div class="section-title">検針・明細情報</div>
     <div class="row">
-      ${textField(p + 'taisho_nengetsu', '対象年月', '例: 2024年5月', true)}
-      ${textField(p + 'shiyouryou', '使用量（kWh・㎥）', '例: 350', true)}
-      ${textField(p + 'nissu', '日数', '例: 31', true)}
+      ${yearMonthField(p + 'taisho', '対象年月', true)}
+      ${textFieldUnit(p + 'shiyouryou', '使用量', '例: 350', true, p + 'shiyouryou_unit', 'kWh')}
+      ${readonlyTextField(p + 'nissu', '日数（検針期間から自動計算）')}
     </div>
     <div class="row">
-      ${wideTextField(p + 'kenshin_period', '検針期間', '例: 2024年5月1日 ～ 2024年5月31日', true)}
+      ${dateRangeField(p + 'kenshin_from', p + 'kenshin_to', '検針期間', true)}
     </div>
     <div class="row">
-      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12,345', true)}
-      ${textField(p + 'kakunin_nengetsubi', '確認日時', '例: 2024年6月1日', true)}
+      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12345', true)}
+      ${fullDateField(p + 'kakunin', '確認日時', true)}
     </div>
     <div class="row">
       ${textField(p + 'denryoku_gas', '電力会社/ガス会社', null, true)}
@@ -878,17 +1131,29 @@ function sBlockHTML(n) {
   </fieldset>`;
 }
 
+function wireSBlockDynamicFields(n) {
+  const p = `s_b${n}_`;
+  wireRikiritsuGate(p + 'shubetsu', p + 'rikiritsu');
+  wireUsageUnit(p + 'shubetsu', p + 'shiyouryou_unit');
+  wireDaysAutoCalc(p + 'kenshin_from', p + 'kenshin_to', p + 'nissu');
+  wireThousandsFormatter(p + 'meisai_kingaku');
+}
+
 function renderSBlocks() {
   // Initial render only. Appends, never clears — clearing would wipe out
   // any values already typed into earlier blocks.
   const wrap = document.getElementById('s_blocks');
-  for (let n = 1; n <= sBlockCount; n++) wrap.appendChild(el(sBlockHTML(n)));
+  for (let n = 1; n <= sBlockCount; n++) {
+    wrap.appendChild(el(sBlockHTML(n)));
+    wireSBlockDynamicFields(n);
+  }
   document.getElementById('s_addBlockWrap').classList.toggle('hidden', sBlockCount >= S_MAX);
 }
 document.getElementById('s_addBlock').addEventListener('click', () => {
   if (sBlockCount < S_MAX) {
     sBlockCount++;
     document.getElementById('s_blocks').appendChild(el(sBlockHTML(sBlockCount)));
+    wireSBlockDynamicFields(sBlockCount);
     document.getElementById('s_addBlockWrap').classList.toggle('hidden', sBlockCount >= S_MAX);
   }
 });
@@ -915,6 +1180,22 @@ function collectShindanValues() {
     if (sh && sh.value) values[p + 'shubetsu_' + sh.value] = true;
     const ms = document.querySelector(`input[name="${p}moshikomi_shubetsu"]:checked`);
     if (ms && ms.value) values[p + 'moshikomi_' + ms.value] = true;
+
+    // Dropdown-based date fields, combined into the plain strings the PDF/canvas drawers expect.
+    values[p + 'taisho_nengetsu'] = yearMonthValue(p + 'taisho');
+    values[p + 'kakunin_nengetsubi'] = fullDateValue(p + 'kakunin');
+    // 診断シートの検針期間は「開始日 ～ 終了日」を1つの欄にまとめて印字する。
+    const from = fullDateValue(p + 'kenshin_from');
+    const to = fullDateValue(p + 'kenshin_to');
+    values[p + 'kenshin_period'] = (from && to) ? `${from} ～ ${to}` : '';
+
+    // 力率: 診断シートのテンプレートには既に「%」が印字済みのため、ここでは付与しない。
+
+    // 使用量: append the unit that matches the selected 契約種別 (kWh or ㎥).
+    if (values[p + 'shiyouryou']) {
+      const unit = (sh && sh.value === 'gas') ? '㎥' : 'kWh';
+      values[p + 'shiyouryou'] = values[p + 'shiyouryou'].replace(/(kWh|㎥)$/, '') + unit;
+    }
   }
   return values;
 }
@@ -995,11 +1276,72 @@ function drawMark(page, field) {
   });
 }
 
-async function renderPdf(templateB64, fieldsMap, values) {
+/* ---- 診断シート: ③件目以降のページに丸数字（③④⑤）を描き直す ----
+ * テンプレートの①②はスキャン画像に焼き込まれているため書き換えられない。
+ * ページを複製した後、①②が印刷されている位置だけ背景色で塗り直し、
+ * 同じ見た目の丸数字を新しく描画する。座標はテンプレート画像を実測して求めた。
+ */
+const SHINDAN_HEADER_BG = rgb(215 / 255, 227 / 255, 240 / 255);
+const SHINDAN_HEADER_NAVY = rgb(65 / 255, 105 / 255, 142 / 255);
+const SHINDAN_HEADER_R = 6.3;
+const SHINDAN_HEADER_SLOT_A = { x: 22.75, y: 598.09 }; // ①の位置（block1相当のスロット）
+const SHINDAN_HEADER_SLOT_B = { x: 22.75, y: 348.6 };  // ②の位置（block2相当のスロット）
+
+function shindanPageCount(n) {
+  if (n <= 2) return 1;
+  if (n <= 4) return 2;
+  return 3;
+}
+
+function drawCircleNumber(page, font, cx, cy, digit) {
+  const pad = 3;
+  const s = SHINDAN_HEADER_R + pad;
+  page.drawRectangle({ x: cx - s, y: cy - s, width: s * 2, height: s * 2, color: SHINDAN_HEADER_BG });
+  page.drawEllipse({ x: cx, y: cy, xScale: SHINDAN_HEADER_R, yScale: SHINDAN_HEADER_R, borderColor: SHINDAN_HEADER_NAVY, borderWidth: 1 });
+  const size = 8;
+  const text = String(digit);
+  const w = font.widthOfTextAtSize(text, size);
+  page.drawText(text, { x: cx - w / 2, y: cy - size * 0.33, size, font, color: SHINDAN_HEADER_NAVY });
+}
+
+function maskCircleNumber(page, cx, cy) {
+  const pad = 3;
+  const s = SHINDAN_HEADER_R + pad;
+  page.drawRectangle({ x: cx - s, y: cy - s, width: s * 2, height: s * 2, color: SHINDAN_HEADER_BG });
+}
+
+// pageIndex 0 は元のテンプレートそのまま（①②の丸数字は画像内に既に印刷済み）。
+function decorateShindanExtraPage(page, pageIndex, font) {
+  if (pageIndex === 1) {
+    drawCircleNumber(page, font, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, 3);
+    drawCircleNumber(page, font, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y, 4);
+  } else if (pageIndex === 2) {
+    drawCircleNumber(page, font, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, 5);
+    maskCircleNumber(page, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y); // ⑥は存在しないので消すだけ
+  }
+}
+
+async function renderPdf(templateB64, fieldsMap, values, opts) {
+  opts = opts || {};
   const templateBytes = b64ToBytes(templateB64);
   const pdfDoc = await PDFDocument.load(templateBytes);
   const font = await embedJPFont(pdfDoc);
+
+  // Some documents need more pages than the template has (e.g. 診断シートに
+  // ③件目以降を追加する場合）。Duplicate a source page until we reach the
+  // requested page count.
+  if (opts.pageCount) {
+    while (pdfDoc.getPageCount() < opts.pageCount) {
+      const [copied] = await pdfDoc.copyPages(pdfDoc, [opts.extraPagesFrom || 0]);
+      pdfDoc.addPage(copied);
+    }
+  }
+
   const pages = pdfDoc.getPages();
+
+  if (opts.decoratePage) {
+    for (let i = 0; i < pages.length; i++) opts.decoratePage(pages[i], i, font);
+  }
 
   for (const key in fieldsMap) {
     const field = fieldsMap[key];
@@ -1092,6 +1434,43 @@ function drawMarkCanvas(ctx, field, scale) {
   ctx.stroke();
 }
 
+// PDF側の drawCircleNumber / maskCircleNumber と見た目を揃えたCanvas版。
+function drawCircleNumberCanvas(ctx, cx, cy, digit, scale) {
+  const pad = 3 * scale, r = SHINDAN_HEADER_R * scale;
+  const px = cx * scale, py = toCanvasY(cy, scale);
+  ctx.fillStyle = 'rgb(215,227,240)';
+  ctx.fillRect(px - r - pad, py - r - pad, (r + pad) * 2, (r + pad) * 2);
+  ctx.beginPath();
+  ctx.arc(px, py, r, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgb(65,105,142)';
+  ctx.lineWidth = scale;
+  ctx.stroke();
+  ctx.fillStyle = 'rgb(65,105,142)';
+  ctx.font = `${8 * scale}px ${CANVAS_FONT_STACK}`;
+  const prevAlign = ctx.textAlign;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(String(digit), px, py);
+  ctx.textAlign = prevAlign;
+}
+
+function maskCircleNumberCanvas(ctx, cx, cy, scale) {
+  const pad = 3 * scale, r = SHINDAN_HEADER_R * scale;
+  const px = cx * scale, py = toCanvasY(cy, scale);
+  ctx.fillStyle = 'rgb(215,227,240)';
+  ctx.fillRect(px - r - pad, py - r - pad, (r + pad) * 2, (r + pad) * 2);
+}
+
+function decorateShindanExtraPageCanvas(ctx, pageIndex, scale) {
+  if (pageIndex === 1) {
+    drawCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, 3, scale);
+    drawCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y, 4, scale);
+  } else if (pageIndex === 2) {
+    drawCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, 5, scale);
+    maskCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y, scale);
+  }
+}
+
 function loadImage(dataUrl) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -1101,7 +1480,7 @@ function loadImage(dataUrl) {
   });
 }
 
-async function renderImagesForDoc(bgB64List, fieldsMap, values) {
+async function renderImagesForDoc(bgB64List, fieldsMap, values, decoratePage) {
   const scale = CANVAS_SCALE;
   const canvases = bgB64List.map(() => null);
   for (let pageIdx = 0; pageIdx < bgB64List.length; pageIdx++) {
@@ -1112,6 +1491,9 @@ async function renderImagesForDoc(bgB64List, fieldsMap, values) {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
     canvases[pageIdx] = ctx;
+  }
+  if (decoratePage) {
+    for (let pageIdx = 0; pageIdx < canvases.length; pageIdx++) decoratePage(canvases[pageIdx], pageIdx, scale);
   }
   for (const key in fieldsMap) {
     const field = fieldsMap[key];
@@ -1198,7 +1580,9 @@ document.getElementById('s_generate_img').addEventListener('click', async () => 
   setStatus('s_status', '画像を作成しています…');
   try {
     const values = collectShindanValues();
-    const urls = await renderImagesForDoc([ASSET_TEMPLATE_SHINDAN_PNG0_B64], FIELDS_SHINDAN, values);
+    const pageCount = shindanPageCount(sBlockCount);
+    const bgList = Array.from({ length: pageCount }, () => ASSET_TEMPLATE_SHINDAN_PNG0_B64);
+    const urls = await renderImagesForDoc(bgList, FIELDS_SHINDAN, values, decorateShindanExtraPageCanvas);
     openImageModal(urls);
     setStatus('s_status', '画像を表示しました。', 'ok');
   } catch (e) {
@@ -1283,6 +1667,25 @@ function checkedValue(name) {
   return el ? el.value : '';
 }
 
+// For 対象年月/確認日時 (single dropdown group) — marks the whole .date-group
+// wrapper invalid when any of its selects is left unset.
+function markInvalidDate(idPrefix, label, errors, needDay) {
+  if (!isDateComplete(idPrefix, needDay)) {
+    const wrap = document.querySelector(`[data-field="${idPrefix}"]`);
+    if (wrap) wrap.classList.add('invalid');
+    errors.push({ label, el: document.getElementById(idPrefix + '_y') });
+  }
+}
+
+// For 検針期間 (from/to dropdown pair sharing one wrapper).
+function markInvalidDateRange(fromPrefix, toPrefix, label, errors) {
+  if (!(isDateComplete(fromPrefix, true) && isDateComplete(toPrefix, true))) {
+    const wrap = document.querySelector(`[data-field="${fromPrefix}"]`);
+    if (wrap) wrap.classList.add('invalid');
+    errors.push({ label, el: document.getElementById(fromPrefix + '_y') });
+  }
+}
+
 function validateKenshin() {
   const panel = document.getElementById('panel-kenshin');
   clearInvalid(panel);
@@ -1296,20 +1699,21 @@ function validateKenshin() {
       markInvalidField(p + 'plan_other_text', `${label}のその他プラン名`, errors);
     }
     markInvalidField(p + 'genzai_plan', `${label}の現在のプラン名`, errors);
-    markInvalidField(p + 'rikiritsu', `${label}の力率`, errors);
+    if (checkedValue(p + 'keishubetsu') === 'douryoku') {
+      markInvalidField(p + 'rikiritsu', `${label}の力率`, errors);
+    }
     markInvalidField(p + 'keiyaku_youryou', `${label}の契約容量`, errors);
     markInvalidGroup(p + 'keishubetsu', `${label}の契約種別`, errors);
     markInvalidField(p + 'furigana', `${label}のフリガナ`, errors);
     markInvalidField(p + 'keiyaku_meigi', `${label}の契約名義`, errors);
     markInvalidField(p + 'customer_no', `${label}のお客様番号`, errors);
     markInvalidField(p + 'supply_no', `${label}の供給地点特定番号`, errors);
-    markInvalidField(p + 'taisho_nengetsu', `${label}の対象年月`, errors);
+    markInvalidDate(p + 'taisho', `${label}の対象年月`, errors, false);
     markInvalidField(p + 'shiyouryou', `${label}の使用量`, errors);
+    markInvalidDateRange(p + 'kenshin_from', p + 'kenshin_to', `${label}の検針期間`, errors);
     markInvalidField(p + 'nissu', `${label}の日数`, errors);
-    markInvalidField(p + 'kenshin_from', `${label}の検針期間（開始）`, errors);
-    markInvalidField(p + 'kenshin_to', `${label}の検針期間（終了）`, errors);
     markInvalidField(p + 'meisai_kingaku', `${label}の明細金額合計`, errors);
-    markInvalidField(p + 'kakunin_nengetsubi', `${label}の確認日時`, errors);
+    markInvalidDate(p + 'kakunin', `${label}の確認日時`, errors, true);
     markInvalidField(p + 'denryoku_gas', `${label}の電力会社/ガス会社`, errors);
     markInvalidField(p + 'jigyousho', `${label}の事業所`, errors);
     markInvalidField(p + 'denwa', `${label}の電話番号`, errors);
@@ -1324,14 +1728,16 @@ function validateShindan() {
   const errors = [];
   for (let n = 1; n <= sBlockCount; n++) {
     const p = `s_b${n}_`;
-    const label = n === 1 ? '①' : '②';
+    const label = CIRCLED_LABEL[n];
     markInvalidField(p + 'moshikomi_no', `${label}の申込番号`, errors);
     markInvalidGroup(p + 'moshikomi_shubetsu', `${label}の申込種別`, errors);
     markInvalidGroup(p + 'plan', `${label}の契約プラン`, errors);
     if (checkedValue(p + 'plan') === 'other') {
       markInvalidField(p + 'plan_other_text', `${label}のその他プラン名`, errors);
     }
-    markInvalidField(p + 'rikiritsu', `${label}の力率`, errors);
+    if (checkedValue(p + 'shubetsu') === 'douryoku') {
+      markInvalidField(p + 'rikiritsu', `${label}の力率`, errors);
+    }
     markInvalidField(p + 'keiyaku_youryou', `${label}の契約容量`, errors);
     markInvalidGroup(p + 'shubetsu', `${label}の契約種別`, errors);
     markInvalidField(p + 'genzai_plan', `${label}の現在のプラン名`, errors);
@@ -1339,12 +1745,12 @@ function validateShindan() {
     markInvalidField(p + 'keiyaku_meigi', `${label}の契約名義`, errors);
     markInvalidField(p + 'customer_no', `${label}のお客様番号`, errors);
     markInvalidField(p + 'supply_no', `${label}の供給地点特定番号`, errors);
-    markInvalidField(p + 'taisho_nengetsu', `${label}の対象年月`, errors);
+    markInvalidDate(p + 'taisho', `${label}の対象年月`, errors, false);
     markInvalidField(p + 'shiyouryou', `${label}の使用量`, errors);
+    markInvalidDateRange(p + 'kenshin_from', p + 'kenshin_to', `${label}の検針期間`, errors);
     markInvalidField(p + 'nissu', `${label}の日数`, errors);
-    markInvalidField(p + 'kenshin_period', `${label}の検針期間`, errors);
     markInvalidField(p + 'meisai_kingaku', `${label}の明細金額合計`, errors);
-    markInvalidField(p + 'kakunin_nengetsubi', `${label}の確認日時`, errors);
+    markInvalidDate(p + 'kakunin', `${label}の確認日時`, errors, true);
     markInvalidField(p + 'denryoku_gas', `${label}の電力会社/ガス会社`, errors);
     markInvalidField(p + 'jigyousho', `${label}の事業所`, errors);
     markInvalidField(p + 'denwa', `${label}の電話番号`, errors);
@@ -1363,6 +1769,10 @@ document.querySelectorAll('main').forEach(mainEl => {
   mainEl.addEventListener('change', e => {
     if (e.target.type === 'radio' && e.target.name) {
       document.querySelectorAll(`[data-group="${e.target.name}"]`).forEach(g => g.classList.remove('invalid'));
+    }
+    if (e.target.tagName === 'SELECT') {
+      const wrap = e.target.closest('.field');
+      if (wrap) wrap.classList.remove('invalid');
     }
   });
 });
@@ -1407,7 +1817,11 @@ document.getElementById('s_generate').addEventListener('click', async () => {
   setStatus('s_status', 'PDFを作成しています…');
   try {
     const values = collectShindanValues();
-    const bytes = await renderPdf(ASSET_TEMPLATE_SHINDAN_B64, FIELDS_SHINDAN, values);
+    const bytes = await renderPdf(ASSET_TEMPLATE_SHINDAN_B64, FIELDS_SHINDAN, values, {
+      pageCount: shindanPageCount(sBlockCount),
+      extraPagesFrom: 0,
+      decoratePage: decorateShindanExtraPage,
+    });
     await saveOrOfferPdf(bytes, '診断シート_記入済み.pdf', 's_status');
   } catch (e) {
     console.error(e);
