@@ -10,7 +10,7 @@
 
 <div class="tabs">
   <button class="tab-btn active" data-tab="kenshin" type="button">検針内容確認シート Ver.1<span class="tab-hint">（5件まで）</span></button>
-  <button class="tab-btn" data-tab="shindan" type="button">診断シート<span class="tab-hint">（2026年2月版・2件まで）</span></button>
+  <button class="tab-btn" data-tab="shindan" type="button">診断シート<span class="tab-hint">（2026年2月版・5件まで）</span></button>
 </div>
 
 <main>
@@ -68,7 +68,7 @@
   <!-- ============ 診断シート ============ -->
   <section id="panel-shindan" class="doc-panel">
     <h2>診断シート（2026年2月版）</h2>
-    <p class="desc">「診断シート（2026年2月版）」と同じレイアウトのPDFを作成します。①は必須、②は必要な場合のみ追加してください。</p>
+    <p class="desc">「診断シート（2026年2月版）」と同じレイアウトのPDFを作成します。①は必須、②〜⑤は必要な分だけ追加してください。</p>
     <div class="privacy-note"><span class="dot"></span>入力データはこのページの中だけでPDFに変換されます。外部には一切送信されません。</div>
 
     <fieldset>
@@ -95,7 +95,7 @@
 
     <div id="s_blocks"></div>
     <div class="block-toggle" id="s_addBlockWrap">
-      <button type="button" id="s_addBlock">＋ ②を追加する</button>
+      <button type="button" id="s_addBlock">＋ 契約を追加する</button>
     </div>
 
     <div class="generate-bar">
@@ -714,6 +714,7 @@ function el(html) {
 function reqMark(required) {
   return required ? '<span class="required-mark">*</span>' : '';
 }
+const ACCURACY_NOTE = '（全角・半角など正確に表記してください）';
 function textField(id, label, placeholder, required) {
   return `<div class="field" data-field="${id}"><label>${label}${reqMark(required)}</label>
     <input type="text" id="${id}" ${placeholder ? `placeholder="${placeholder}"` : ''}></div>`;
@@ -932,15 +933,15 @@ function kBlockHTML(n) {
 
     <div class="section-title">契約名義</div>
     <div class="row">
-      ${textField(p + 'furigana', 'フリガナ', null, true)}
-      ${textField(p + 'keiyaku_meigi', '契約名義', null, true)}
+      ${textField(p + 'furigana', 'フリガナ' + ACCURACY_NOTE, null, true)}
+      ${textField(p + 'keiyaku_meigi', '契約名義' + ACCURACY_NOTE, null, true)}
     </div>
     <div class="row">
       ${textField(p + 'customer_no', 'お客様番号（数字のみ・最大23桁）', null, true)}
       ${textField(p + 'supply_no', '供給地点特定番号（数字のみ・最大23桁）', null, true)}
     </div>
     <div class="row">
-      ${wideTextField(p + 'address', '契約使用場所住所（任意）')}
+      ${wideTextField(p + 'address', '契約使用場所住所（任意）' + ACCURACY_NOTE)}
     </div>
 
     <div class="section-title">検針・明細情報</div>
@@ -1096,15 +1097,15 @@ function sBlockHTML(n) {
 
     <div class="section-title">契約名義</div>
     <div class="row">
-      ${textField(p + 'furigana', 'フリガナ', null, true)}
-      ${textField(p + 'keiyaku_meigi', '契約名義', null, true)}
+      ${textField(p + 'furigana', 'フリガナ' + ACCURACY_NOTE, null, true)}
+      ${textField(p + 'keiyaku_meigi', '契約名義' + ACCURACY_NOTE, null, true)}
     </div>
     <div class="row">
       ${textField(p + 'customer_no', 'お客様番号', null, true)}
       ${textField(p + 'supply_no', '供給地点特定番号', null, true)}
     </div>
     <div class="row">
-      ${wideTextField(p + 'address', '契約使用場所住所（任意・PDF下部の余白に「' + CIRCLED_LABEL[n] + '住所：」として記載されます）')}
+      ${wideTextField(p + 'address', '契約使用場所住所（任意・PDF下部の余白に「' + CIRCLED_LABEL[n] + '住所：」として記載されます）' + ACCURACY_NOTE)}
     </div>
 
     <div class="section-title">検針・明細情報</div>
