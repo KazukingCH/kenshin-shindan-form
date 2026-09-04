@@ -1216,7 +1216,8 @@ function drawDigitsField(page, field, text, font) {
   const size = Math.min(10, (y1 - y0) * 0.55);
   for (let i = 0; i < chars.length && i < field.centers.length; i++) {
     const cx = field.centers[i];
-    whiteout(page, cx - cellW / 2 + 1, y0, cx + cellW / 2 - 1, y1);
+    // マス目の仕切り線を消してしまわないよう、セル境界より内側だけを塗る。
+    whiteout(page, cx - cellW / 2 + 3, y0, cx + cellW / 2 - 3, y1);
     const w = font.widthOfTextAtSize(chars[i], size);
     page.drawText(chars[i], { x: cx - w / 2, y: (y0 + y1) / 2 - size * 0.33, size, font, color: rgb(0, 0, 0) });
   }
@@ -1375,9 +1376,10 @@ function drawDigitsFieldCanvas(ctx, field, text, scale) {
   const size = Math.min(10 * scale, (yBot - yTop) * 0.55);
   ctx.font = `${size}px ${CANVAS_FONT_STACK}`;
   ctx.textBaseline = 'middle';
+  const cellMargin = 3 * scale; // マス目の仕切り線を消してしまわないよう内側だけを塗る
   for (let i = 0; i < chars.length && i < field.centers.length; i++) {
     const cx = field.centers[i] * scale;
-    whiteoutCanvas(ctx, cx - cellW / 2 + 1, yTop, cx + cellW / 2 - 1, yBot);
+    whiteoutCanvas(ctx, cx - cellW / 2 + cellMargin, yTop, cx + cellW / 2 - cellMargin, yBot);
     ctx.fillStyle = '#000000'; // whiteoutCanvas() above just set fillStyle to white
     const w = ctx.measureText(chars[i]).width;
     ctx.fillText(chars[i], cx - w / 2, (yTop + yBot) / 2);
