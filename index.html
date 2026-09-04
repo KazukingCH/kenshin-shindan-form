@@ -38,33 +38,27 @@
   <p>フォームに入力すると、元の書式そのままのPDFをこの画面の中だけで生成します。入力内容がサーバーに送られることはありません。</p>
 </header>
 
-<div class="tabs">
-  <button class="tab-btn active" data-tab="kenshin" type="button">検針内容確認シート Ver.1<span class="tab-hint">（5件まで）</span></button>
-  <button class="tab-btn" data-tab="shindan" type="button">診断シート<span class="tab-hint">（2026年2月版・5件まで）</span></button>
-</div>
-
 <main>
-  <!-- ============ 検針内容確認シート ============ -->
-  <section id="panel-kenshin" class="doc-panel active">
-    <h2>検針内容確認シート Ver.1</h2>
-    <p class="desc">「検針内容確認シートVer.1」と同じレイアウトのPDFを作成します。申込番号1は必須、2〜5は必要な分だけ追加してください。</p>
+  <section id="panel-unified" class="doc-panel active">
+    <h2>検針・診断 入力フォーム</h2>
+    <p class="desc">この1つのフォームに入力すると、「検針内容確認シートVer.1」と「診断シート（2026年2月版）」の両方のPDFを作成できます。1件目は必須、2〜5件目は必要な分だけ追加してください。</p>
     <div class="privacy-note"><span class="dot"></span>入力データはこのページの中だけでPDFに変換されます。外部には一切送信されません。</div>
 
     <fieldset>
-      <legend>お客様情報</legend>
+      <legend>お客様情報（共通）</legend>
       <div class="row">
-        <div class="field"><label>ご契約者名</label><input type="text" id="k_keiyakusha"></div>
-        <div class="field"><label>ご担当者名</label><input type="text" id="k_tantousha"></div>
+        <div class="field"><label>ご契約者名</label><input type="text" id="u_keiyakusha"></div>
+        <div class="field"><label>ご担当者名</label><input type="text" id="u_tantousha"></div>
       </div>
     </fieldset>
 
-    <div id="k_blocks"></div>
-    <div class="block-toggle" id="k_addBlockWrap">
-      <button type="button" id="k_addBlock">＋ 申込番号を追加する</button>
+    <div id="u_blocks"></div>
+    <div class="block-toggle" id="u_addBlockWrap">
+      <button type="button" id="u_addBlock">＋ 契約を追加する</button>
     </div>
 
     <fieldset>
-      <legend>署名・販売店情報</legend>
+      <legend>検針内容確認シート用の項目</legend>
       <div class="row">
         <div class="field wide"><label>ご署名欄（お客様氏名）</label><input type="text" id="k_signature" placeholder="必ずお客様がご記入ください"></div>
       </div>
@@ -88,25 +82,8 @@
       </div>
     </fieldset>
 
-    <div class="generate-bar">
-      <button class="generate-btn" id="k_generate" type="button">この内容でPDFを作成</button>
-      <button class="generate-btn secondary" id="k_generate_img" type="button">画像で保存する</button>
-      <span class="status-msg" id="k_status"></span>
-    </div>
-  </section>
-
-  <!-- ============ 診断シート ============ -->
-  <section id="panel-shindan" class="doc-panel">
-    <h2>診断シート（2026年2月版）</h2>
-    <p class="desc">「診断シート（2026年2月版）」と同じレイアウトのPDFを作成します。①は必須、②〜⑤は必要な分だけ追加してください。</p>
-    <div class="privacy-note"><span class="dot"></span>入力データはこのページの中だけでPDFに変換されます。外部には一切送信されません。</div>
-
     <fieldset>
-      <legend>共通情報</legend>
-      <div class="row">
-        <div class="field"><label>ご契約者名</label><input type="text" id="s_keiyakusha"></div>
-        <div class="field"><label>ご担当者名</label><input type="text" id="s_tantousha"></div>
-      </div>
+      <legend>診断シート用の項目</legend>
       <div class="row">
         <div class="field">
           <label>① 現在の回線契約の有無</label>
@@ -123,15 +100,17 @@
       </div>
     </fieldset>
 
-    <div id="s_blocks"></div>
-    <div class="block-toggle" id="s_addBlockWrap">
-      <button type="button" id="s_addBlock">＋ 契約を追加する</button>
-    </div>
-
     <div class="generate-bar">
-      <button class="generate-btn" id="s_generate" type="button">この内容でPDFを作成</button>
-      <button class="generate-btn secondary" id="s_generate_img" type="button">画像で保存する</button>
-      <span class="status-msg" id="s_status"></span>
+      <div class="generate-row">
+        <button class="generate-btn" id="k_generate" type="button">検針内容確認シートPDFを作成</button>
+        <button class="generate-btn secondary" id="k_generate_img" type="button">検針シートを画像で保存</button>
+        <span class="status-msg" id="k_status"></span>
+      </div>
+      <div class="generate-row">
+        <button class="generate-btn" id="s_generate" type="button">診断シートPDFを作成</button>
+        <button class="generate-btn secondary" id="s_generate_img" type="button">診断シートを画像で保存</button>
+        <span class="status-msg" id="s_status"></span>
+      </div>
     </div>
   </section>
 </main>
@@ -465,6 +444,11 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--accent); }
   padding: 16px 0;
   margin-top: 8px;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.generate-row {
+  display: flex;
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
@@ -534,11 +518,10 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--accent); }
   .radio-group label, .checkbox-group label { font-size: 13.5px; }
 
   .generate-bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    gap: 14px;
     padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
   }
+  .generate-row { flex-direction: column; align-items: stretch; gap: 8px; }
   .generate-btn { width: 100%; padding: 14px 20px; font-size: 15px; }
   .status-msg { text-align: center; }
 
@@ -735,16 +718,6 @@ window.addEventListener('error', (e) => showFatalError(e.message || String(e.err
 window.addEventListener('unhandledrejection', (e) => {
   const reason = e.reason;
   showFatalError((reason && (reason.message || String(reason))) || 'unknown error');
-});
-
-/* ===================== Tabs ===================== */
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.doc-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
-  });
 });
 
 /* ===================== Helpers ===================== */
@@ -966,27 +939,43 @@ function wireThousandsFormatter(id) {
 }
 wireThousandsFormatter('s_shiharai_kingaku');
 
-/* ===================== Document A: 検針内容確認シート ===================== */
-let kBlockCount = 1;
-const K_MAX = 5;
+/* ===================== 検針・診断 共通ブロック =====================
+ * 検針内容確認シートと診断シートは1契約あたりの入力項目がほぼ同一なので、
+ * 入力フォームは1つに統一し（IDプレフィックス u_bN_）、そこから両方の
+ * PDF/画像を生成する。FIELDS_KENSHIN / FIELDS_SHINDAN 側のキー名
+ * （k_bN_ / s_bN_）はテンプレートPDFの座標定義なので変更せず、
+ * collectKenshinValues / collectShindanValues が u_bN_ から値を読んで
+ * それぞれのキーに詰め替える。
+ */
+let uBlockCount = 1;
+const U_MAX = 5;
+const CIRCLED_LABEL = { 1: '①', 2: '②', 3: '③', 4: '④', 5: '⑤' };
+// 検針シート・診断シート、どちらの共通情報欄（契約者名・担当者名）にも
+// 使われる、ブロック番号を持たない共有フィールドの対応表。
+const SHARED_DOC_FIELDS = {
+  k_keiyakusha: 'u_keiyakusha', k_tantousha: 'u_tantousha',
+  s_keiyakusha: 'u_keiyakusha', s_tantousha: 'u_tantousha',
+};
 
-function kBlockHTML(n) {
-  const p = `k_b${n}_`;
-  const showMoshikomi = n >= 2;
+function unifiedBlockHTML(n) {
+  const p = `u_b${n}_`;
+  const showDoujou = n >= 2;
   return `
   <fieldset class="block-fs">
-    <legend>申込番号 ${n}${n === 1 ? '（必須）' : ''}</legend>
-    ${showMoshikomi ? `
+    <legend>${CIRCLED_LABEL[n]}${n === 1 ? '（必須）' : ''}</legend>
     <div class="row">
-      <div class="checkbox-group"><label><input type="checkbox" id="${p}moshikomi_doujou"> 同上（契約名義などが申込1と同じ）</label></div>
-      <div class="radio-group" data-group="${p}moshikomi_shubetsu">
-        <span style="font-size:12px;color:var(--muted);font-weight:700;margin-right:4px;">申込種別${reqMark(true)}:</span>
-        <label><input type="radio" name="${p}moshikomi_shubetsu" value="tsujou"> 通常</label>
-        <label><input type="radio" name="${p}moshikomi_shubetsu" value="shinki"> 新規</label>
-        <label><input type="radio" name="${p}moshikomi_shubetsu" value="saikeiyaku"> 再契約</label>
-        <label><input type="radio" name="${p}moshikomi_shubetsu" value="" checked> 選択なし</label>
+      ${textField(p + 'moshikomi_no', '申込番号（診断シートのみ使用・任意）', null, false)}
+      ${showDoujou ? `<div class="checkbox-group"><label><input type="checkbox" id="${p}moshikomi_doujou"> 同上（契約名義などが1件目と同じ）</label></div>` : ''}
+      <div class="field" data-group="${p}moshikomi_shubetsu">
+        <label>申込種別<span class="required-mark">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="${p}moshikomi_shubetsu" value="tsujou"> 通常</label>
+          <label><input type="radio" name="${p}moshikomi_shubetsu" value="shinki"> 新規</label>
+          <label><input type="radio" name="${p}moshikomi_shubetsu" value="saikeiyaku"> 再契約</label>
+          <label><input type="radio" name="${p}moshikomi_shubetsu" value="" checked> 選択なし</label>
+        </div>
       </div>
-    </div>` : ''}
+    </div>
 
     <div class="section-title" data-group="${p}plan">契約プラン<span class="required-mark">*</span></div>
     <div class="row">
@@ -1053,8 +1042,8 @@ function kBlockHTML(n) {
   </fieldset>`;
 }
 
-function wireKBlockDynamicFields(n) {
-  const p = `k_b${n}_`;
+function wireUnifiedBlockDynamicFields(n) {
+  const p = `u_b${n}_`;
   wireRikiritsuGate(p + 'keishubetsu', p + 'rikiritsu');
   wireUsageUnit(p + 'keishubetsu', p + 'shiyouryou_unit');
   wireSupplyNoGate(p + 'keishubetsu', p + 'supply_no');
@@ -1062,62 +1051,65 @@ function wireKBlockDynamicFields(n) {
   wireThousandsFormatter(p + 'meisai_kingaku');
 }
 
-function renderKBlocks() {
+function renderUnifiedBlocks() {
   // Initial render only. Appends, never clears — clearing would wipe out
   // any values already typed into earlier blocks.
-  const wrap = document.getElementById('k_blocks');
-  for (let n = 1; n <= kBlockCount; n++) {
-    wrap.appendChild(el(kBlockHTML(n)));
-    wireKBlockDynamicFields(n);
+  const wrap = document.getElementById('u_blocks');
+  for (let n = 1; n <= uBlockCount; n++) {
+    wrap.appendChild(el(unifiedBlockHTML(n)));
+    wireUnifiedBlockDynamicFields(n);
   }
-  document.getElementById('k_addBlockWrap').classList.toggle('hidden', kBlockCount >= K_MAX);
+  document.getElementById('u_addBlockWrap').classList.toggle('hidden', uBlockCount >= U_MAX);
 }
-document.getElementById('k_addBlock').addEventListener('click', () => {
-  if (kBlockCount < K_MAX) {
-    kBlockCount++;
-    document.getElementById('k_blocks').appendChild(el(kBlockHTML(kBlockCount)));
-    wireKBlockDynamicFields(kBlockCount);
-    document.getElementById('k_addBlockWrap').classList.toggle('hidden', kBlockCount >= K_MAX);
+document.getElementById('u_addBlock').addEventListener('click', () => {
+  if (uBlockCount < U_MAX) {
+    uBlockCount++;
+    document.getElementById('u_blocks').appendChild(el(unifiedBlockHTML(uBlockCount)));
+    wireUnifiedBlockDynamicFields(uBlockCount);
+    document.getElementById('u_addBlockWrap').classList.toggle('hidden', uBlockCount >= U_MAX);
   }
 });
-renderKBlocks();
+renderUnifiedBlocks();
 
 function collectKenshinValues() {
   const values = {};
   for (const key in FIELDS_KENSHIN) {
     const f = FIELDS_KENSHIN[key];
     if (f.type === 'text' || f.type === 'digits') {
-      const elx = document.getElementById(key);
+      const m = key.match(/^k_b(\d+)_(.+)$/);
+      const srcId = m ? `u_b${m[1]}_${m[2]}` : (SHARED_DOC_FIELDS[key] || key);
+      const elx = document.getElementById(srcId);
       if (elx) values[key] = elx.value.trim();
     }
   }
-  for (let n = 1; n <= kBlockCount; n++) {
-    const p = `k_b${n}_`;
-    const plan = document.querySelector(`input[name="${p}plan"]:checked`);
-    if (plan && plan.value) values[p + 'planmark_' + plan.value] = true;
-    const ks = document.querySelector(`input[name="${p}keishubetsu"]:checked`);
-    if (ks && ks.value) values[p + 'keishubetsu_' + ks.value] = true;
+  for (let n = 1; n <= uBlockCount; n++) {
+    const up = `u_b${n}_`;
+    const kp = `k_b${n}_`;
+    const plan = document.querySelector(`input[name="${up}plan"]:checked`);
+    if (plan && plan.value) values[kp + 'planmark_' + plan.value] = true;
+    const ks = document.querySelector(`input[name="${up}keishubetsu"]:checked`);
+    if (ks && ks.value) values[kp + 'keishubetsu_' + ks.value] = true;
     if (n >= 2) {
-      const doujou = document.getElementById(p + 'moshikomi_doujou');
-      if (doujou && doujou.checked) values[p + 'moshikomi_doujou'] = true;
-      const ms = document.querySelector(`input[name="${p}moshikomi_shubetsu"]:checked`);
-      if (ms && ms.value) values[p + 'moshikomi_' + ms.value] = true;
+      const doujou = document.getElementById(up + 'moshikomi_doujou');
+      if (doujou && doujou.checked) values[kp + 'moshikomi_doujou'] = true;
+      const ms = document.querySelector(`input[name="${up}moshikomi_shubetsu"]:checked`);
+      if (ms && ms.value) values[kp + 'moshikomi_' + ms.value] = true;
     }
 
     // Dropdown-based date fields, combined into the plain strings the PDF/canvas drawers expect.
-    values[p + 'taisho_nengetsu'] = yearMonthValue(p + 'taisho');
-    values[p + 'kakunin_nengetsubi'] = fullDateValue(p + 'kakunin');
-    values[p + 'kenshin_from'] = monthDayValue(p + 'kenshin_from');
-    values[p + 'kenshin_to'] = monthDayValue(p + 'kenshin_to');
+    values[kp + 'taisho_nengetsu'] = yearMonthValue(up + 'taisho');
+    values[kp + 'kakunin_nengetsubi'] = fullDateValue(up + 'kakunin');
+    values[kp + 'kenshin_from'] = monthDayValue(up + 'kenshin_from');
+    values[kp + 'kenshin_to'] = monthDayValue(up + 'kenshin_to');
 
     // 力率: the original template has no printed "%", so append it here.
     // (診断シート's template already prints "%", so this is Document A only.)
-    if (values[p + 'rikiritsu']) values[p + 'rikiritsu'] = values[p + 'rikiritsu'].replace(/%$/, '') + '%';
+    if (values[kp + 'rikiritsu']) values[kp + 'rikiritsu'] = values[kp + 'rikiritsu'].replace(/%$/, '') + '%';
 
     // 使用量: append the unit that matches the selected 契約種別 (kWh or ㎥).
-    if (values[p + 'shiyouryou']) {
+    if (values[kp + 'shiyouryou']) {
       const unit = (ks && ks.value === 'gas') ? '㎥' : 'kWh';
-      values[p + 'shiyouryou'] = values[p + 'shiyouryou'].replace(/(kWh|㎥)$/, '') + unit;
+      values[kp + 'shiyouryou'] = values[kp + 'shiyouryou'].replace(/(kWh|㎥)$/, '') + unit;
     }
   }
   const biko = document.querySelector('input[name="k_biko_shubetsu"]:checked');
@@ -1127,132 +1119,14 @@ function collectKenshinValues() {
   return values;
 }
 
-/* ===================== Document B: 診断シート ===================== */
-let sBlockCount = 1;
-const S_MAX = 5;
-// 診断シートのテンプレートは①②の2契約分しか印刷されていないため、③件目以降は
-// 同じレイアウトのページを複製し、丸数字だけ描き直して増やす（下の
-// shindanPageCount / decorateShindanExtraPage を参照）。
-const CIRCLED_LABEL = { 1: '①', 2: '②', 3: '③', 4: '④', 5: '⑤' };
-
-function sBlockHTML(n) {
-  const p = `s_b${n}_`;
-  return `
-  <fieldset class="block-fs">
-    <legend>${CIRCLED_LABEL[n]}${n === 1 ? '（必須）' : ''}</legend>
-    <div class="row">
-      ${textField(p + 'moshikomi_no', '申込番号', null, false)}
-      <div class="field" data-group="${p}moshikomi_shubetsu">
-        <label>申込種別<span class="required-mark">*</span></label>
-        <div class="radio-group">
-          <label><input type="radio" name="${p}moshikomi_shubetsu" value="tsujou"> 通常</label>
-          <label><input type="radio" name="${p}moshikomi_shubetsu" value="shinki"> 新規</label>
-          <label><input type="radio" name="${p}moshikomi_shubetsu" value="saikeiyaku"> 再契約</label>
-          <label><input type="radio" name="${p}moshikomi_shubetsu" value="" checked> 選択なし</label>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-title" data-group="${p}plan">契約プラン<span class="required-mark">*</span></div>
-    <div class="row">
-      <div class="radio-group" data-group="${p}plan">
-        <label><input type="radio" name="${p}plan" value="A"> 従量電灯A</label>
-        <label><input type="radio" name="${p}plan" value="B"> 従量電灯B</label>
-        <label><input type="radio" name="${p}plan" value="C"> 従量電灯C</label>
-        <label><input type="radio" name="${p}plan" value="other"> その他</label>
-        <label><input type="radio" name="${p}plan" value="" checked> 選択なし</label>
-      </div>
-    </div>
-    <div class="row">
-      ${textField(p + 'plan_other_text', 'その他プラン名（その他選択時のみ必須）')}
-      ${textFieldUnit(p + 'rikiritsu', '力率（動力選択時のみ必須）', '例: 95', false, p + 'rikiritsu_unit', '%')}
-      ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）', '例: 30', true)}
-    </div>
-    <div class="row">
-      <div class="field" data-group="${p}shubetsu">
-        <label>契約種別<span class="required-mark">*</span></label>
-        <div class="radio-group">
-          <label><input type="radio" name="${p}shubetsu" value="juryou"> 従量</label>
-          <label><input type="radio" name="${p}shubetsu" value="douryoku"> 動力</label>
-          <label><input type="radio" name="${p}shubetsu" value="gas"> ガス</label>
-          <label><input type="radio" name="${p}shubetsu" value="" checked> 選択なし</label>
-        </div>
-      </div>
-      ${textField(p + 'genzai_plan', '現在のプラン名', null, true)}
-    </div>
-
-    <div class="section-title">契約名義</div>
-    <div class="row">
-      ${textField(p + 'furigana', 'フリガナ' + ACCURACY_NOTE, null, true)}
-      ${textField(p + 'keiyaku_meigi', '契約名義' + ACCURACY_NOTE, null, true)}
-    </div>
-    <div class="row">
-      ${textField(p + 'customer_no', 'お客様番号', null, true)}
-      ${textField(p + 'supply_no', '供給地点特定番号（数字のみ・電気22桁／ガス17桁）', null, true)}
-    </div>
-    <div class="row">
-      ${wideTextField(p + 'address', '契約使用場所住所（任意・PDF下部の余白に「' + CIRCLED_LABEL[n] + '住所：」として記載されます）' + ACCURACY_NOTE)}
-    </div>
-
-    <div class="section-title">検針・明細情報</div>
-    <div class="row">
-      ${yearMonthField(p + 'taisho', '対象年月', true)}
-      ${textFieldUnit(p + 'shiyouryou', '使用量', '例: 350', true, p + 'shiyouryou_unit', 'kWh')}
-      ${readonlyTextField(p + 'nissu', '日数（検針期間から自動計算）')}
-    </div>
-    <div class="row">
-      ${dateRangeField(p + 'kenshin_from', p + 'kenshin_to', '検針期間', true)}
-    </div>
-    <div class="row">
-      ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12345', true)}
-      ${fullDateField(p + 'kakunin', '確認日時', true)}
-    </div>
-    <div class="row">
-      ${textField(p + 'denryoku_gas', '電力会社/ガス会社', null, true)}
-      ${textField(p + 'jigyousho', '事業所', null, true)}
-    </div>
-    <div class="row">
-      ${textField(p + 'denwa', '電話番号', null, true)}
-      ${textField(p + 'operator', '担当オペレーター', null, true)}
-    </div>
-  </fieldset>`;
-}
-
-function wireSBlockDynamicFields(n) {
-  const p = `s_b${n}_`;
-  wireRikiritsuGate(p + 'shubetsu', p + 'rikiritsu');
-  wireUsageUnit(p + 'shubetsu', p + 'shiyouryou_unit');
-  wireSupplyNoGate(p + 'shubetsu', p + 'supply_no');
-  wireDaysAutoCalc(p + 'kenshin_from', p + 'kenshin_to', p + 'nissu');
-  wireThousandsFormatter(p + 'meisai_kingaku');
-}
-
-function renderSBlocks() {
-  // Initial render only. Appends, never clears — clearing would wipe out
-  // any values already typed into earlier blocks.
-  const wrap = document.getElementById('s_blocks');
-  for (let n = 1; n <= sBlockCount; n++) {
-    wrap.appendChild(el(sBlockHTML(n)));
-    wireSBlockDynamicFields(n);
-  }
-  document.getElementById('s_addBlockWrap').classList.toggle('hidden', sBlockCount >= S_MAX);
-}
-document.getElementById('s_addBlock').addEventListener('click', () => {
-  if (sBlockCount < S_MAX) {
-    sBlockCount++;
-    document.getElementById('s_blocks').appendChild(el(sBlockHTML(sBlockCount)));
-    wireSBlockDynamicFields(sBlockCount);
-    document.getElementById('s_addBlockWrap').classList.toggle('hidden', sBlockCount >= S_MAX);
-  }
-});
-renderSBlocks();
-
 function collectShindanValues() {
   const values = {};
   for (const key in FIELDS_SHINDAN) {
     const f = FIELDS_SHINDAN[key];
     if (f.type === 'text') {
-      const elx = document.getElementById(key);
+      const m = key.match(/^s_b(\d+)_(.+)$/);
+      const srcId = m ? `u_b${m[1]}_${m[2]}` : (SHARED_DOC_FIELDS[key] || key);
+      const elx = document.getElementById(srcId);
       if (elx) values[key] = elx.value.trim();
     }
   }
@@ -1260,29 +1134,30 @@ function collectShindanValues() {
   if (umu && umu.value === 'yes') values['s_kaisen_umu_yes'] = true;
   if (umu && umu.value === 'no') values['s_kaisen_umu_no'] = true;
 
-  for (let n = 1; n <= sBlockCount; n++) {
-    const p = `s_b${n}_`;
-    const plan = document.querySelector(`input[name="${p}plan"]:checked`);
-    if (plan && plan.value) values[p + 'plan_' + plan.value] = true;
-    const sh = document.querySelector(`input[name="${p}shubetsu"]:checked`);
-    if (sh && sh.value) values[p + 'shubetsu_' + sh.value] = true;
-    const ms = document.querySelector(`input[name="${p}moshikomi_shubetsu"]:checked`);
-    if (ms && ms.value) values[p + 'moshikomi_' + ms.value] = true;
+  for (let n = 1; n <= uBlockCount; n++) {
+    const up = `u_b${n}_`;
+    const sp = `s_b${n}_`;
+    const plan = document.querySelector(`input[name="${up}plan"]:checked`);
+    if (plan && plan.value) values[sp + 'plan_' + plan.value] = true;
+    const sh = document.querySelector(`input[name="${up}keishubetsu"]:checked`);
+    if (sh && sh.value) values[sp + 'shubetsu_' + sh.value] = true;
+    const ms = document.querySelector(`input[name="${up}moshikomi_shubetsu"]:checked`);
+    if (ms && ms.value) values[sp + 'moshikomi_' + ms.value] = true;
 
     // Dropdown-based date fields, combined into the plain strings the PDF/canvas drawers expect.
-    values[p + 'taisho_nengetsu'] = yearMonthValue(p + 'taisho');
-    values[p + 'kakunin_nengetsubi'] = fullDateValue(p + 'kakunin');
+    values[sp + 'taisho_nengetsu'] = yearMonthValue(up + 'taisho');
+    values[sp + 'kakunin_nengetsubi'] = fullDateValue(up + 'kakunin');
     // 診断シートの検針期間は「開始日 ～ 終了日」を1つの欄にまとめて印字する。
-    const from = fullDateValue(p + 'kenshin_from');
-    const to = fullDateValue(p + 'kenshin_to');
-    values[p + 'kenshin_period'] = (from && to) ? `${from} ～ ${to}` : '';
+    const from = fullDateValue(up + 'kenshin_from');
+    const to = fullDateValue(up + 'kenshin_to');
+    values[sp + 'kenshin_period'] = (from && to) ? `${from} ～ ${to}` : '';
 
     // 力率: 診断シートのテンプレートには既に「%」が印字済みのため、ここでは付与しない。
 
     // 使用量: append the unit that matches the selected 契約種別 (kWh or ㎥).
-    if (values[p + 'shiyouryou']) {
+    if (values[sp + 'shiyouryou']) {
       const unit = (sh && sh.value === 'gas') ? '㎥' : 'kWh';
-      values[p + 'shiyouryou'] = values[p + 'shiyouryou'].replace(/(kWh|㎥)$/, '') + unit;
+      values[sp + 'shiyouryou'] = values[sp + 'shiyouryou'].replace(/(kWh|㎥)$/, '') + unit;
     }
   }
   return values;
@@ -1668,7 +1543,7 @@ document.getElementById('s_generate_img').addEventListener('click', async () => 
   setStatus('s_status', '画像を作成しています…');
   try {
     const values = collectShindanValues();
-    const pageCount = shindanPageCount(sBlockCount);
+    const pageCount = shindanPageCount(uBlockCount);
     const bgList = Array.from({ length: pageCount }, () => ASSET_TEMPLATE_SHINDAN_PNG0_B64);
     const urls = await renderImagesForDoc(bgList, FIELDS_SHINDAN, values, decorateShindanExtraPageCanvas);
     openImageModal(urls);
@@ -1785,12 +1660,12 @@ function markInvalidDateRange(fromPrefix, toPrefix, label, errors) {
 }
 
 function validateKenshin() {
-  const panel = document.getElementById('panel-kenshin');
+  const panel = document.getElementById('panel-unified');
   clearInvalid(panel);
   const errors = [];
-  for (let n = 1; n <= kBlockCount; n++) {
-    const p = `k_b${n}_`;
-    const label = `申込番号${n}`;
+  for (let n = 1; n <= uBlockCount; n++) {
+    const p = `u_b${n}_`;
+    const label = `${n}件目`;
     if (n >= 2) markInvalidGroup(p + 'moshikomi_shubetsu', `${label}の申込種別`, errors);
     markInvalidGroup(p + 'plan', `${label}の契約プラン`, errors);
     if (checkedValue(p + 'plan') === 'other') {
@@ -1821,27 +1696,27 @@ function validateKenshin() {
 }
 
 function validateShindan() {
-  const panel = document.getElementById('panel-shindan');
+  const panel = document.getElementById('panel-unified');
   clearInvalid(panel);
   const errors = [];
-  for (let n = 1; n <= sBlockCount; n++) {
-    const p = `s_b${n}_`;
+  for (let n = 1; n <= uBlockCount; n++) {
+    const p = `u_b${n}_`;
     const label = CIRCLED_LABEL[n];
     markInvalidGroup(p + 'moshikomi_shubetsu', `${label}の申込種別`, errors);
     markInvalidGroup(p + 'plan', `${label}の契約プラン`, errors);
     if (checkedValue(p + 'plan') === 'other') {
       markInvalidField(p + 'plan_other_text', `${label}のその他プラン名`, errors);
     }
-    if (checkedValue(p + 'shubetsu') === 'douryoku') {
+    if (checkedValue(p + 'keishubetsu') === 'douryoku') {
       markInvalidField(p + 'rikiritsu', `${label}の力率`, errors);
     }
     markInvalidField(p + 'keiyaku_youryou', `${label}の契約容量`, errors);
-    markInvalidGroup(p + 'shubetsu', `${label}の契約種別`, errors);
+    markInvalidGroup(p + 'keishubetsu', `${label}の契約種別`, errors);
     markInvalidField(p + 'genzai_plan', `${label}の現在のプラン名`, errors);
     markInvalidField(p + 'furigana', `${label}のフリガナ`, errors);
     markInvalidField(p + 'keiyaku_meigi', `${label}の契約名義`, errors);
     markInvalidField(p + 'customer_no', `${label}のお客様番号`, errors);
-    markInvalidExactLength(p + 'supply_no', `${label}の供給地点特定番号（${supplyNoLength(p + 'shubetsu')}桁）`, errors, supplyNoLength(p + 'shubetsu'));
+    markInvalidExactLength(p + 'supply_no', `${label}の供給地点特定番号（${supplyNoLength(p + 'keishubetsu')}桁）`, errors, supplyNoLength(p + 'keishubetsu'));
     markInvalidDate(p + 'taisho', `${label}の対象年月`, errors, false);
     markInvalidField(p + 'shiyouryou', `${label}の使用量`, errors);
     markInvalidDateRange(p + 'kenshin_from', p + 'kenshin_to', `${label}の検針期間`, errors);
@@ -1915,7 +1790,7 @@ document.getElementById('s_generate').addEventListener('click', async () => {
   try {
     const values = collectShindanValues();
     const bytes = await renderPdf(ASSET_TEMPLATE_SHINDAN_B64, FIELDS_SHINDAN, values, {
-      pageCount: shindanPageCount(sBlockCount),
+      pageCount: shindanPageCount(uBlockCount),
       extraPagesFrom: 0,
       decoratePage: decorateShindanExtraPage,
     });
