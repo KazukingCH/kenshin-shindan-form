@@ -948,8 +948,12 @@ wireThousandsFormatter('s_shiharai_kingaku');
  * それぞれのキーに詰め替える。
  */
 let uBlockCount = 1;
-const U_MAX = 5;
-const CIRCLED_LABEL = { 1: '①', 2: '②', 3: '③', 4: '④', 5: '⑤' };
+// 契約件数の上限は設けない。5件目まではテンプレートPDFにそのまま欄があり、
+// 6件目以降は既存ページを複製して欄を増やす（kenshinPageCount / shindanPageCount 等を参照）。
+const CIRCLED_DIGITS_TABLE = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩', '⑪', '⑫', '⑬', '⑭', '⑮', '⑯', '⑰', '⑱', '⑲', '⑳'];
+function getCircledLabel(n) {
+  return n <= CIRCLED_DIGITS_TABLE.length ? CIRCLED_DIGITS_TABLE[n - 1] : `(${n})`;
+}
 // 検針シート・診断シート、どちらの共通情報欄（契約者名・担当者名）にも
 // 使われる、ブロック番号を持たない共有フィールドの対応表。
 const SHARED_DOC_FIELDS = {
@@ -962,7 +966,7 @@ function unifiedBlockHTML(n) {
   const showDoujou = n >= 2;
   return `
   <fieldset class="block-fs">
-    <legend>${CIRCLED_LABEL[n]}${n === 1 ? '（必須）' : ''}</legend>
+    <legend>${getCircledLabel(n)}${n === 1 ? '（必須）' : ''}</legend>
     <div class="row">
       ${textField(p + 'moshikomi_no', '申込番号（診断シートのみ使用・任意）', null, false)}
       ${showDoujou ? `<div class="checkbox-group"><label><input type="checkbox" id="${p}moshikomi_doujou"> 同上（契約名義などが1件目と同じ）</label></div>` : ''}
@@ -1059,22 +1063,19 @@ function renderUnifiedBlocks() {
     wrap.appendChild(el(unifiedBlockHTML(n)));
     wireUnifiedBlockDynamicFields(n);
   }
-  document.getElementById('u_addBlockWrap').classList.toggle('hidden', uBlockCount >= U_MAX);
 }
 document.getElementById('u_addBlock').addEventListener('click', () => {
-  if (uBlockCount < U_MAX) {
-    uBlockCount++;
-    document.getElementById('u_blocks').appendChild(el(unifiedBlockHTML(uBlockCount)));
-    wireUnifiedBlockDynamicFields(uBlockCount);
-    document.getElementById('u_addBlockWrap').classList.toggle('hidden', uBlockCount >= U_MAX);
-  }
+  uBlockCount++;
+  document.getElementById('u_blocks').appendChild(el(unifiedBlockHTML(uBlockCount)));
+  wireUnifiedBlockDynamicFields(uBlockCount);
 });
 renderUnifiedBlocks();
 
 function collectKenshinValues() {
   const values = {};
-  for (const key in FIELDS_KENSHIN) {
-    const f = FIELDS_KENSHIN[key];
+  const fieldsMap = buildDynamicKenshinFields(uBlockCount);
+  for (const key in fieldsMap) {
+    const f = fieldsMap[key];
     if (f.type === 'text' || f.type === 'digits') {
       const m = key.match(/^k_b(\d+)_(.+)$/);
       const srcId = m ? `u_b${m[1]}_${m[2]}` : (SHARED_DOC_FIELDS[key] || key);
@@ -1121,8 +1122,9 @@ function collectKenshinValues() {
 
 function collectShindanValues() {
   const values = {};
-  for (const key in FIELDS_SHINDAN) {
-    const f = FIELDS_SHINDAN[key];
+  const fieldsMap = buildDynamicShindanFields(uBlockCount);
+  for (const key in fieldsMap) {
+    const f = fieldsMap[key];
     if (f.type === 'text') {
       const m = key.match(/^s_b(\d+)_(.+)$/);
       const srcId = m ? `u_b${m[1]}_${m[2]}` : (SHARED_DOC_FIELDS[key] || key);
@@ -1251,10 +1253,9 @@ const SHINDAN_HEADER_R = 6.3;
 const SHINDAN_HEADER_SLOT_A = { x: 22.75, y: 598.09 }; // ①の位置（block1相当のスロット）
 const SHINDAN_HEADER_SLOT_B = { x: 22.75, y: 348.6 };  // ②の位置（block2相当のスロット）
 
+// 契約件数に上限がないため、必要なページ数も件数から都度計算する（1ページ2件）。
 function shindanPageCount(n) {
-  if (n <= 2) return 1;
-  if (n <= 4) return 2;
-  return 3;
+  return Math.max(1, Math.ceil(n / 2));
 }
 
 function drawCircleNumber(page, font, cx, cy, digit) {
@@ -1262,8 +1263,8 @@ function drawCircleNumber(page, font, cx, cy, digit) {
   const s = SHINDAN_HEADER_R + pad;
   page.drawRectangle({ x: cx - s, y: cy - s, width: s * 2, height: s * 2, color: SHINDAN_HEADER_BG });
   page.drawEllipse({ x: cx, y: cy, xScale: SHINDAN_HEADER_R, yScale: SHINDAN_HEADER_R, borderColor: SHINDAN_HEADER_NAVY, borderWidth: 1 });
-  const size = 8;
   const text = String(digit);
+  const size = text.length > 1 ? 6 : 8;
   const w = font.widthOfTextAtSize(text, size);
   page.drawText(text, { x: cx - w / 2, y: cy - size * 0.33, size, font, color: SHINDAN_HEADER_NAVY });
 }
@@ -1275,14 +1276,136 @@ function maskCircleNumber(page, cx, cy) {
 }
 
 // pageIndex 0 は元のテンプレートそのまま（①②の丸数字は画像内に既に印刷済み）。
-function decorateShindanExtraPage(page, pageIndex, font) {
-  if (pageIndex === 1) {
-    drawCircleNumber(page, font, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, 3);
-    drawCircleNumber(page, font, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y, 4);
-  } else if (pageIndex === 2) {
-    drawCircleNumber(page, font, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, 5);
-    maskCircleNumber(page, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y); // ⑥は存在しないので消すだけ
+// それ以外は複製したページなので、①②が印刷されている位置に実際の契約番号を描き直す。
+// そのページの2件目が存在しない場合（総件数が奇数のときの最終ページ）は消すだけにする。
+function decorateShindanExtraPage(page, pageIndex, font, blockCount) {
+  if (pageIndex < 1) return;
+  const slotABlock = pageIndex * 2 + 1;
+  const slotBBlock = pageIndex * 2 + 2;
+  if (slotABlock <= blockCount) {
+    drawCircleNumber(page, font, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, slotABlock);
+  } else {
+    maskCircleNumber(page, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y);
   }
+  if (slotBBlock <= blockCount) {
+    drawCircleNumber(page, font, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y, slotBBlock);
+  } else {
+    maskCircleNumber(page, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y);
+  }
+}
+
+// 5件目まではfields.jsに座標を静的に持たせているが、6件目以降は際限がないため
+// ①②（s_b1 / s_b2）のオフセットを使い回して実行時に座標を生成する。
+function buildDynamicShindanFields(blockCount) {
+  if (blockCount <= 5) return FIELDS_SHINDAN;
+  const fields = Object.assign({}, FIELDS_SHINDAN);
+  for (let n = 6; n <= blockCount; n++) {
+    const pageIndex = Math.floor((n - 1) / 2);
+    const sourceBlock = (n - 1) % 2 === 0 ? 1 : 2;
+    const prefix = new RegExp(`^s_b${sourceBlock}_(.+)$`);
+    for (const key in FIELDS_SHINDAN) {
+      const m = key.match(prefix);
+      if (!m) continue;
+      const suffix = m[1];
+      const newField = Object.assign({}, FIELDS_SHINDAN[key], { page: pageIndex });
+      if (suffix === 'address') newField.prefix = getCircledLabel(n) + '住所：';
+      fields[`s_b${n}_${suffix}`] = newField;
+    }
+  }
+  return fields;
+}
+
+/* ---- 検針内容確認シート: 6件目以降のページに「N.」の番号を描き直す ----
+ * テンプレートの2ページ目（page index 1）には3〜5件目用の欄と「3.」「4.」「5.」
+ * という番号がスキャン画像に焼き込まれている。6件目以降は2ページ目のレイアウトを
+ * 複製し、その番号部分だけ塗りつぶして正しい番号を描き直す。
+ */
+const K_LABEL_BASE_CY = [750.38, 518.68, 291.28]; // 3・4・5件目の番号の高さ（page index 1基準）
+const K_LABEL_OFFSET_Y = 15.64; // 番号は各欄の一番上の項目より少し上にある
+const K_LABEL_X0 = 28, K_LABEL_X1 = 41, K_LABEL_X_TEXT = 29, K_LABEL_HALF_H = 5;
+
+function kenshinPageCount(n) {
+  if (n <= 5) return 2;
+  return 2 + Math.ceil((n - 5) / 3);
+}
+
+function kenshinLabelFontSize(text) {
+  return text.length > 2 ? 6 : (text.length > 1 ? 7.5 : 9);
+}
+
+function drawKenshinPageNumber(page, font, baseCy, n) {
+  const cy = baseCy + K_LABEL_OFFSET_Y;
+  page.drawRectangle({ x: K_LABEL_X0, y: cy - K_LABEL_HALF_H, width: K_LABEL_X1 - K_LABEL_X0, height: K_LABEL_HALF_H * 2, color: rgb(1, 1, 1) });
+  const text = `${n}.`;
+  const size = kenshinLabelFontSize(text);
+  page.drawText(text, { x: K_LABEL_X_TEXT, y: cy - size * 0.33, size, font, color: rgb(0, 0, 0) });
+}
+
+function maskKenshinPageNumber(page, baseCy) {
+  const cy = baseCy + K_LABEL_OFFSET_Y;
+  page.drawRectangle({ x: K_LABEL_X0, y: cy - K_LABEL_HALF_H, width: K_LABEL_X1 - K_LABEL_X0, height: K_LABEL_HALF_H * 2, color: rgb(1, 1, 1) });
+}
+
+// pageIndex 0,1 は元のテンプレートそのまま（1〜5の番号は画像内に既に印刷済み）。
+function decorateKenshinExtraPage(page, pageIndex, font, blockCount) {
+  if (pageIndex < 2) return;
+  const firstBlockOnPage = (pageIndex - 2) * 3 + 6;
+  for (let slot = 0; slot < 3; slot++) {
+    const n = firstBlockOnPage + slot;
+    if (n <= blockCount) drawKenshinPageNumber(page, font, K_LABEL_BASE_CY[slot], n);
+    else maskKenshinPageNumber(page, K_LABEL_BASE_CY[slot]);
+  }
+}
+
+function drawKenshinPageNumberCanvas(ctx, baseCy, n, scale) {
+  const cy = toCanvasY(baseCy + K_LABEL_OFFSET_Y, scale);
+  const x0 = K_LABEL_X0 * scale, x1 = K_LABEL_X1 * scale, halfH = K_LABEL_HALF_H * scale;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(x0, cy - halfH, x1 - x0, halfH * 2);
+  const text = `${n}.`;
+  ctx.font = `${kenshinLabelFontSize(text) * scale}px ${CANVAS_FONT_STACK}`;
+  ctx.fillStyle = '#000000';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, K_LABEL_X_TEXT * scale, cy);
+}
+
+function maskKenshinPageNumberCanvas(ctx, baseCy, scale) {
+  const cy = toCanvasY(baseCy + K_LABEL_OFFSET_Y, scale);
+  const x0 = K_LABEL_X0 * scale, x1 = K_LABEL_X1 * scale, halfH = K_LABEL_HALF_H * scale;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(x0, cy - halfH, x1 - x0, halfH * 2);
+}
+
+function decorateKenshinExtraPageCanvas(ctx, pageIndex, scale, blockCount) {
+  if (pageIndex < 2) return;
+  const firstBlockOnPage = (pageIndex - 2) * 3 + 6;
+  for (let slot = 0; slot < 3; slot++) {
+    const n = firstBlockOnPage + slot;
+    if (n <= blockCount) drawKenshinPageNumberCanvas(ctx, K_LABEL_BASE_CY[slot], n, scale);
+    else maskKenshinPageNumberCanvas(ctx, K_LABEL_BASE_CY[slot], scale);
+  }
+}
+
+// 5件目まではfields.jsに座標を静的に持たせているが、6件目以降は際限がないため
+// 3〜5件目（k_b3 / k_b4 / k_b5）のオフセットを使い回して実行時に座標を生成する。
+function buildDynamicKenshinFields(blockCount) {
+  if (blockCount <= 5) return FIELDS_KENSHIN;
+  const fields = Object.assign({}, FIELDS_KENSHIN);
+  const sourceBlocks = [3, 4, 5];
+  for (let n = 6; n <= blockCount; n++) {
+    const idx = n - 6;
+    const pageIndex = 2 + Math.floor(idx / 3);
+    const sourceBlock = sourceBlocks[idx % 3];
+    const prefix = new RegExp(`^k_b${sourceBlock}_(.+)$`);
+    for (const key in FIELDS_KENSHIN) {
+      const m = key.match(prefix);
+      if (!m) continue;
+      const suffix = m[1];
+      fields[`k_b${n}_${suffix}`] = Object.assign({}, FIELDS_KENSHIN[key], { page: pageIndex });
+    }
+  }
+  return fields;
 }
 
 async function renderPdf(templateB64, fieldsMap, values, opts) {
@@ -1411,11 +1534,12 @@ function drawCircleNumberCanvas(ctx, cx, cy, digit, scale) {
   ctx.lineWidth = scale;
   ctx.stroke();
   ctx.fillStyle = 'rgb(65,105,142)';
-  ctx.font = `${8 * scale}px ${CANVAS_FONT_STACK}`;
+  const text = String(digit);
+  ctx.font = `${(text.length > 1 ? 6 : 8) * scale}px ${CANVAS_FONT_STACK}`;
   const prevAlign = ctx.textAlign;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(String(digit), px, py);
+  ctx.fillText(text, px, py);
   ctx.textAlign = prevAlign;
 }
 
@@ -1426,12 +1550,18 @@ function maskCircleNumberCanvas(ctx, cx, cy, scale) {
   ctx.fillRect(px - r - pad, py - r - pad, (r + pad) * 2, (r + pad) * 2);
 }
 
-function decorateShindanExtraPageCanvas(ctx, pageIndex, scale) {
-  if (pageIndex === 1) {
-    drawCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, 3, scale);
-    drawCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y, 4, scale);
-  } else if (pageIndex === 2) {
-    drawCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, 5, scale);
+function decorateShindanExtraPageCanvas(ctx, pageIndex, scale, blockCount) {
+  if (pageIndex < 1) return;
+  const slotABlock = pageIndex * 2 + 1;
+  const slotBBlock = pageIndex * 2 + 2;
+  if (slotABlock <= blockCount) {
+    drawCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, slotABlock, scale);
+  } else {
+    maskCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_A.x, SHINDAN_HEADER_SLOT_A.y, scale);
+  }
+  if (slotBBlock <= blockCount) {
+    drawCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y, slotBBlock, scale);
+  } else {
     maskCircleNumberCanvas(ctx, SHINDAN_HEADER_SLOT_B.x, SHINDAN_HEADER_SLOT_B.y, scale);
   }
 }
@@ -1516,9 +1646,13 @@ document.getElementById('k_generate_img').addEventListener('click', async () => 
   setStatus('k_status', '画像を作成しています…');
   try {
     const values = collectKenshinValues();
+    const kPageCount = kenshinPageCount(uBlockCount);
+    const kBgList = [ASSET_TEMPLATE_KENSHIN_PNG0_B64].concat(
+      Array.from({ length: kPageCount - 1 }, () => ASSET_TEMPLATE_KENSHIN_PNG1_B64)
+    );
     const urls = await renderImagesForDoc(
-      [ASSET_TEMPLATE_KENSHIN_PNG0_B64, ASSET_TEMPLATE_KENSHIN_PNG1_B64],
-      FIELDS_KENSHIN, values
+      kBgList, buildDynamicKenshinFields(uBlockCount), values,
+      (ctx, i, scale) => decorateKenshinExtraPageCanvas(ctx, i, scale, uBlockCount)
     );
     openImageModal(urls);
     setStatus('k_status', '画像を表示しました。', 'ok');
@@ -1547,7 +1681,10 @@ document.getElementById('s_generate_img').addEventListener('click', async () => 
     const values = collectShindanValues();
     const pageCount = shindanPageCount(uBlockCount);
     const bgList = Array.from({ length: pageCount }, () => ASSET_TEMPLATE_SHINDAN_PNG0_B64);
-    const urls = await renderImagesForDoc(bgList, FIELDS_SHINDAN, values, decorateShindanExtraPageCanvas);
+    const urls = await renderImagesForDoc(
+      bgList, buildDynamicShindanFields(uBlockCount), values,
+      (ctx, i, scale) => decorateShindanExtraPageCanvas(ctx, i, scale, uBlockCount)
+    );
     openImageModal(urls);
     setStatus('s_status', '画像を表示しました。', 'ok');
   } catch (e) {
@@ -1702,7 +1839,7 @@ function validateShindan() {
   const errors = [];
   for (let n = 1; n <= uBlockCount; n++) {
     const p = `u_b${n}_`;
-    const label = CIRCLED_LABEL[n];
+    const label = getCircledLabel(n);
     markInvalidGroup(p + 'moshikomi_shubetsu', `${label}の申込種別`, errors);
     if (checkedValue(p + 'plan') === 'other') {
       markInvalidField(p + 'plan_other_text', `${label}のその他プラン名`, errors);
@@ -1764,7 +1901,11 @@ document.getElementById('k_generate').addEventListener('click', async () => {
   setStatus('k_status', 'PDFを作成しています…');
   try {
     const values = collectKenshinValues();
-    const bytes = await renderPdf(ASSET_TEMPLATE_KENSHIN_B64, FIELDS_KENSHIN, values);
+    const bytes = await renderPdf(ASSET_TEMPLATE_KENSHIN_B64, buildDynamicKenshinFields(uBlockCount), values, {
+      pageCount: kenshinPageCount(uBlockCount),
+      extraPagesFrom: 1,
+      decoratePage: (page, i, font) => decorateKenshinExtraPage(page, i, font, uBlockCount),
+    });
     await saveOrOfferPdf(bytes, '検針内容確認シート_記入済み.pdf', 'k_status');
   } catch (e) {
     console.error(e);
@@ -1789,10 +1930,10 @@ document.getElementById('s_generate').addEventListener('click', async () => {
   setStatus('s_status', 'PDFを作成しています…');
   try {
     const values = collectShindanValues();
-    const bytes = await renderPdf(ASSET_TEMPLATE_SHINDAN_B64, FIELDS_SHINDAN, values, {
+    const bytes = await renderPdf(ASSET_TEMPLATE_SHINDAN_B64, buildDynamicShindanFields(uBlockCount), values, {
       pageCount: shindanPageCount(uBlockCount),
       extraPagesFrom: 0,
-      decoratePage: decorateShindanExtraPage,
+      decoratePage: (page, i, font) => decorateShindanExtraPage(page, i, font, uBlockCount),
     });
     await saveOrOfferPdf(bytes, '診断シート_記入済み.pdf', 's_status');
   } catch (e) {
