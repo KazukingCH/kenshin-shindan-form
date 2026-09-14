@@ -2388,7 +2388,6 @@ function generateFmt1Text() {
     const p = `u_b${n}_`;
     lines.push(`${getCircledLabel(n)}${fmtKeishubetsuLabel(p)}`);
     lines.push(`供給地点番号：${val(p + 'supply_no')}`);
-    lines.push(`明細名義：${val(p + 'keiyaku_meigi')}`);
     const bYubin = val(p + 'yubin');
     const bAddr = val(p + 'address');
     lines.push(`使用場所住所：${bYubin ? `〒${bYubin}${bAddr ? ' ' : ''}` : ''}${bAddr}`);
