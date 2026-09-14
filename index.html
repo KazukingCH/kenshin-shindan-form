@@ -86,6 +86,14 @@
         <div id="fmt_birthday_slot"></div>
         <div class="field"><label>メールアドレス</label><input type="email" id="fmt_email"></div>
       </div>
+      <div class="section-title">請求書送付先（契約住所と異なる場合のみ入力）</div>
+      <div class="row">
+        <div class="field"><label>送付先名義</label><input type="text" id="fmt_seikyuu_meigi"></div>
+        <div class="field"><label>送付先名義（カナ）</label><input type="text" id="fmt_seikyuu_meigi_kana"></div>
+      </div>
+      <div class="row">
+        <div class="field wide"><label>送付先住所</label><input type="text" id="fmt_seikyuu_address"></div>
+      </div>
       <div class="row">
         <div class="field" data-group="fmt_meisai_shubetsu">
           <label>明細種別</label>
@@ -504,6 +512,21 @@ legend {
 }
 .field input[type="text"]::placeholder { color: var(--muted); opacity: 0.7; }
 .field input[type="text"]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -1px;
+}
+.field > select {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  width: 100%;
+  background: var(--surface);
+  color: var(--text);
+}
+.field > select:disabled { background: var(--surface-2); color: var(--muted); }
+.field > select:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: -1px;
 }
@@ -1134,6 +1157,29 @@ function wireRikiritsuGate(shubetsuName, rikiritsuId) {
   apply();
 }
 
+// NU/調整FMTの「プラン名」は契約種別ごとに選べるプランが決まっている
+// （検針内容確認シート・診断シートの「契約プラン」A/B/C/その他とは別物）。
+const PLAN_NAME_OPTIONS = {
+  juryou: ['パルスタンダード', 'パルプレミアムS（OMS）', 'パルプレミアムS（TMS）'],
+  douryoku: ['パル動力スタンダード', 'パル動力プレミアムS'],
+  gas: ['ガスプラン'],
+};
+function wirePlanNameGate(shubetsuName, selectId) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  const apply = () => {
+    const val = checkedValue(shubetsuName);
+    const options = PLAN_NAME_OPTIONS[val] || [];
+    const prev = select.value;
+    select.innerHTML = (options.length ? '<option value="">選択なし</option>' : '<option value="">契約種別を選択してください</option>')
+      + options.map(o => `<option value="${o}">${o}</option>`).join('');
+    select.value = options.includes(prev) ? prev : '';
+    select.disabled = options.length === 0;
+  };
+  document.querySelectorAll(`input[name="${shubetsuName}"]`).forEach(r => r.addEventListener('change', apply));
+  apply();
+}
+
 // 使用量の単位は契約種別で切り替える：従量/動力＝kWh、ガス＝㎥
 function wireUsageUnit(shubetsuName, unitSpanId) {
   const span = document.getElementById(unitSpanId);
@@ -1265,18 +1311,7 @@ function unifiedBlockFmtHTML(n) {
   <fieldset class="block-fs">
     <legend>${getCircledLabel(n)}${n === 1 ? '（必須）' : ''}</legend>
 
-    <div class="section-title" data-group="${p}plan">契約プラン</div>
     <div class="row">
-      <div class="radio-group" data-group="${p}plan">
-        <label><input type="radio" name="${p}plan" value="A"> 従量電灯A</label>
-        <label><input type="radio" name="${p}plan" value="B"> 従量電灯B</label>
-        <label><input type="radio" name="${p}plan" value="C"> 従量電灯C</label>
-        <label><input type="radio" name="${p}plan" value="other"> その他</label>
-        <label><input type="radio" name="${p}plan" value="" checked> 選択なし</label>
-      </div>
-    </div>
-    <div class="row">
-      ${textField(p + 'plan_other_text', 'その他プラン名（その他選択時のみ必須）')}
       <div class="field" data-group="${p}keishubetsu">
         <label>契約種別<span class="required-mark">*</span></label>
         <div class="radio-group">
@@ -1286,15 +1321,18 @@ function unifiedBlockFmtHTML(n) {
           <label><input type="radio" name="${p}keishubetsu" value="" checked> 選択なし</label>
         </div>
       </div>
+      <div class="field" data-field="${p}plan_name">
+        <label>プラン名</label>
+        <select id="${p}plan_name"><option value="">契約種別を選択してください</option></select>
+      </div>
     </div>
 
-    <div class="section-title">契約名義・住所</div>
+    <div class="section-title">供給地点番号・住所</div>
     <div class="row">
-      ${textField(p + 'keiyaku_meigi', '契約名義' + ACCURACY_NOTE, null, true)}
       ${textField(p + 'supply_no', '供給地点特定番号（数字のみ・電気22桁／ガス17桁）', null, true)}
+      ${textField(p + 'yubin', '使用場所郵便番号（任意）', '例: 123-4567')}
     </div>
     <div class="row">
-      ${textField(p + 'yubin', '使用場所郵便番号（任意）', '例: 123-4567')}
       ${wideTextField(p + 'address', '契約使用場所住所（任意）' + ACCURACY_NOTE)}
     </div>
   </fieldset>`;
@@ -1324,29 +1362,36 @@ function unifiedBlockPdfExtraHTML(n) {
       </div>
     </div>
 
-    <div class="section-title">契約プラン（①で入力・自動反映）</div>
+    <div class="section-title" data-group="${p}plan">契約プラン</div>
     <div class="row">
-      ${readonlyTextField(p + 'view_plan', '契約プラン')}
-      ${readonlyTextField(p + 'view_keishubetsu', '契約種別')}
+      <div class="radio-group" data-group="${p}plan">
+        <label><input type="radio" name="${p}plan" value="A"> 従量電灯A</label>
+        <label><input type="radio" name="${p}plan" value="B"> 従量電灯B</label>
+        <label><input type="radio" name="${p}plan" value="C"> 従量電灯C</label>
+        <label><input type="radio" name="${p}plan" value="other"> その他</label>
+        <label><input type="radio" name="${p}plan" value="" checked> 選択なし</label>
+      </div>
+      ${readonlyTextField(p + 'view_keishubetsu', '契約種別（①で入力・自動反映）')}
     </div>
     <div class="row">
+      ${textField(p + 'plan_other_text', 'その他プラン名（その他選択時のみ必須）')}
       ${textField(p + 'genzai_plan', '現在のプラン名', null, true)}
       ${textFieldUnit(p + 'rikiritsu', '力率（動力選択時のみ必須）', '例: 95', false, p + 'rikiritsu_unit', '%')}
       ${textField(p + 'keiyaku_youryou', '契約容量（A・kVA・kW）（ガス選択時は不要）', '例: 30', true)}
     </div>
 
-    <div class="section-title">契約名義・住所（①で入力・自動反映）</div>
+    <div class="section-title">契約名義・住所</div>
     <div class="row">
-      ${readonlyTextField(p + 'view_keiyaku_meigi', '契約名義')}
+      ${textField(p + 'keiyaku_meigi', '契約名義' + ACCURACY_NOTE, null, true)}
       ${textField(p + 'furigana', 'フリガナ' + ACCURACY_NOTE, null, true)}
     </div>
     <div class="row">
       ${textField(p + 'customer_no', 'お客様番号（数字のみ・最大23桁）', null, true)}
-      ${readonlyTextField(p + 'view_supply_no', '供給地点特定番号')}
+      ${readonlyTextField(p + 'view_supply_no', '供給地点特定番号（①で入力・自動反映）')}
     </div>
     <div class="row">
-      ${readonlyTextField(p + 'view_yubin', '使用場所郵便番号')}
-      ${readonlyWideTextField(p + 'view_address', '契約使用場所住所')}
+      ${readonlyTextField(p + 'view_yubin', '使用場所郵便番号（①で入力・自動反映）')}
+      ${readonlyWideTextField(p + 'view_address', '契約使用場所住所（①で入力・自動反映）')}
     </div>
 
     <div class="section-title">検針・明細情報</div>
@@ -1377,9 +1422,7 @@ function unifiedBlockPdfExtraHTML(n) {
 function syncBlockSummary(n) {
   const p = `u_b${n}_`;
   const set = (id, val) => { const elx = document.getElementById(id); if (elx) elx.value = val; };
-  set(p + 'view_plan', fmtPlanLabel(p));
   set(p + 'view_keishubetsu', fmtKeishubetsuLabel(p));
-  set(p + 'view_keiyaku_meigi', document.getElementById(p + 'keiyaku_meigi')?.value || '');
   set(p + 'view_supply_no', document.getElementById(p + 'supply_no')?.value || '');
   set(p + 'view_yubin', document.getElementById(p + 'yubin')?.value || '');
   set(p + 'view_address', document.getElementById(p + 'address')?.value || '');
@@ -1406,6 +1449,7 @@ function syncTopLevelSummary() {
 function wireUnifiedBlockDynamicFields(n) {
   const p = `u_b${n}_`;
   wireRikiritsuGate(p + 'keishubetsu', p + 'rikiritsu');
+  wirePlanNameGate(p + 'keishubetsu', p + 'plan_name');
   wireUsageUnit(p + 'keishubetsu', p + 'shiyouryou_unit');
   wireSupplyNoGate(p + 'keishubetsu', p + 'supply_no');
   wireDaysAutoCalc(p + 'kenshin_from', p + 'kenshin_to', p + 'nissu');
@@ -2334,18 +2378,6 @@ document.getElementById('s_generate').addEventListener('click', async () => {
 document.getElementById('fmt_kakutoku_bi_slot').outerHTML = fullDateField('fmt_kakutoku_bi', '獲得商談日', false);
 document.getElementById('fmt_birthday_slot').outerHTML = birthdateField('fmt_birthday', '生年月日');
 
-function fmtPlanLabel(prefix) {
-  const val = checkedValue(prefix + 'plan');
-  if (val === 'A') return '従量電灯A';
-  if (val === 'B') return '従量電灯B';
-  if (val === 'C') return '従量電灯C';
-  if (val === 'other') {
-    const t = (document.getElementById(prefix + 'plan_other_text')?.value || '').trim();
-    return t ? `その他（${t}）` : 'その他';
-  }
-  return '';
-}
-
 function fmtKeishubetsuLabel(prefix) {
   const val = checkedValue(prefix + 'keishubetsu');
   if (val === 'juryou') return '従量';
@@ -2391,7 +2423,7 @@ function generateFmt1Text() {
     const bYubin = val(p + 'yubin');
     const bAddr = val(p + 'address');
     lines.push(`使用場所住所：${bYubin ? `〒${bYubin}${bAddr ? ' ' : ''}` : ''}${bAddr}`);
-    lines.push(`プラン名：${fmtPlanLabel(p)}`);
+    lines.push(`プラン名：${val(p + 'plan_name')}`);
     lines.push('');
   }
   lines.push('');
@@ -2401,6 +2433,15 @@ function generateFmt1Text() {
   if (koteidenwa) lines.push(`固定電話番号：${koteidenwa}`);
   lines.push(`生年月日：${fullDateValue('fmt_birthday')}`);
   lines.push(`メールアドレス：${val('fmt_email')}`);
+  const seikyuuAddr = val('fmt_seikyuu_address');
+  const seikyuuMeigi = val('fmt_seikyuu_meigi');
+  const seikyuuMeigiKana = val('fmt_seikyuu_meigi_kana');
+  if (seikyuuAddr || seikyuuMeigi || seikyuuMeigiKana) {
+    lines.push('請求書先送付先住所');
+    lines.push(`住所：${seikyuuAddr}`);
+    lines.push(`送付先名義：${seikyuuMeigi}`);
+    lines.push(`送付先名義カナ：${seikyuuMeigiKana}`);
+  }
   lines.push('');
   lines.push(`明細種別：${checkedValue('fmt_meisai_shubetsu')}`);
   lines.push(`支払方法：${checkedValue('fmt_shiharai_houhou')}`);
