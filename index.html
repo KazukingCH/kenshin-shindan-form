@@ -134,7 +134,7 @@
           <label><input type="checkbox" id="fmt_biko_rescue"> トラブル解決レスキュー(初年度無料)</label>
           <label><input type="checkbox" id="fmt_biko_drstore"> Dr.store B特典(2ヶ月無料)</label>
           <label><input type="checkbox" id="fmt_biko_isupport"> Iサポート付帯(2ヶ月無料)</label>
-          <label><input type="checkbox" id="fmt_biko_gas_maintenance"> ガス設備メンテナンス(3ヶ月無料)（動力契約がある場合のみ選択可）</label>
+          <label><input type="checkbox" id="fmt_biko_gas_maintenance"> ガス設備メンテナンス(3ヶ月無料)（従量契約との併用不可）</label>
         </div>
       </div>
       <div class="row">
@@ -1545,17 +1545,17 @@ function wireUnifiedBlockDynamicFields(n) {
   bindTwoWay(p + 'address', p + 'view_address');
 }
 
-// ガス設備メンテナンスは動力契約がある場合のみ選択できる（従量・ガスのみの
-// 申込では選択不可）。いずれかのブロックの契約種別が変わるたびに再判定する。
+// ガス設備メンテナンスは従量契約と併用できない（ガスのみ・動力のみ・
+// ガス+動力などは選択可）。いずれかのブロックの契約種別が変わるたびに再判定する。
 function updateGasMaintenanceAvailability() {
   const checkbox = document.getElementById('fmt_biko_gas_maintenance');
   if (!checkbox) return;
-  let hasDouryoku = false;
+  let hasJuryou = false;
   for (let n = 1; n <= uBlockCount; n++) {
-    if (checkedValue(`u_b${n}_keishubetsu`) === 'douryoku') { hasDouryoku = true; break; }
+    if (checkedValue(`u_b${n}_keishubetsu`) === 'juryou') { hasJuryou = true; break; }
   }
-  checkbox.disabled = !hasDouryoku;
-  if (!hasDouryoku) checkbox.checked = false;
+  checkbox.disabled = hasJuryou;
+  if (hasJuryou) checkbox.checked = false;
 }
 document.getElementById('u_blocks').addEventListener('change', (e) => {
   if (e.target.name && /^u_b\d+_keishubetsu$/.test(e.target.name)) updateGasMaintenanceAvailability();
