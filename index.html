@@ -186,18 +186,18 @@
 
   <section id="panel-pdf" class="doc-panel">
     <h2>②PDFの作成</h2>
-    <p class="desc">①で入力したご契約者名・各契約の内容は、下に自動反映されています（グレーの欄は編集できません。修正する場合は①に戻ってください）。ご担当者名など残りの項目を入力してPDFを作成してください。</p>
+    <p class="desc">①と共通の項目（ご契約者名・契約種別・供給地点番号など）は、どちらの画面で入力してもリアルタイムで両方に反映されます。ご担当者名など残りの項目を入力してPDFを作成してください。</p>
     <button type="button" id="back_to_fmt" class="step-back">← ①NU/調整FMTの入力へ戻る</button>
 
     <fieldset>
       <legend>お客様情報</legend>
       <div class="row">
-        <div class="field" data-field="view_u_keiyakusha"><label>ご契約者名（①で入力・自動反映）</label><input type="text" id="view_u_keiyakusha" readonly></div>
+        <div class="field" data-field="view_u_keiyakusha"><label>ご契約者名</label><input type="text" id="view_u_keiyakusha"></div>
         <div class="field"><label>ご担当者名</label><input type="text" id="u_tantousha"></div>
       </div>
       <div class="row">
-        <div class="field" data-field="view_fmt_yubin"><label>郵便番号（①で入力・自動反映）</label><input type="text" id="view_fmt_yubin" readonly></div>
-        <div class="field wide" data-field="view_fmt_address"><label>契約住所（①で入力・自動反映）</label><input type="text" id="view_fmt_address" readonly></div>
+        <div class="field" data-field="view_fmt_yubin"><label>郵便番号</label><input type="text" id="view_fmt_yubin" placeholder="例: 123-4567"></div>
+        <div class="field wide" data-field="view_fmt_address"><label>契約住所</label><input type="text" id="view_fmt_address"></div>
       </div>
     </fieldset>
 
@@ -1007,10 +1007,6 @@ function readonlyTextField(id, label, placeholder) {
   return `<div class="field" data-field="${id}"><label>${label}</label>
     <input type="text" id="${id}" readonly ${placeholder ? `placeholder="${placeholder}"` : ''}></div>`;
 }
-function readonlyWideTextField(id, label) {
-  return `<div class="field wide" data-field="${id}"><label>${label}</label>
-    <input type="text" id="${id}" readonly></div>`;
-}
 function textFieldUnit(id, label, placeholder, required, unitId, defaultUnit) {
   return `<div class="field" data-field="${id}"><label>${label}${reqMark(required)}</label>
     <div class="input-with-suffix">
@@ -1180,6 +1176,28 @@ function wirePlanNameGate(shubetsuName, selectId) {
   apply();
 }
 
+// 建物区分・業種はガス取次のときのみ使う項目。契約種別がガス以外なら無効化する。
+const TATEMONO_KUBUN_OPTIONS = ['店舗兼住宅(法人・屋号)', '集合建物', '戸建住宅(個人)', '集合住宅(個人)'];
+const GYOUSHU_OPTIONS = [
+  '家庭用', '会社・事務所', '卸・小売', '料理・飲食', '旅館・ホテル', '百貨店・スーパー',
+  '理容・美容', 'クリーニング', '娯楽場', '寄宿舎・寮', '商業用その他', '商業用・未分類',
+  '食料品', '繊維', '紙・パルプ', '化学', '窯業土石', '鉄鋼', '非鉄金属',
+];
+function wireGasOnlySelect(shubetsuName, selectId, options) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  const apply = () => {
+    const isGas = checkedValue(shubetsuName) === 'gas';
+    const prev = select.value;
+    select.innerHTML = (isGas ? '<option value="">選択なし</option>' : '<option value="">ガス取次のみ使用</option>')
+      + options.map(o => `<option value="${o}">${o}</option>`).join('');
+    select.value = isGas && options.includes(prev) ? prev : '';
+    select.disabled = !isGas;
+  };
+  document.querySelectorAll(`input[name="${shubetsuName}"]`).forEach(r => r.addEventListener('change', apply));
+  apply();
+}
+
 // 使用量の単位は契約種別で切り替える：従量/動力＝kWh、ガス＝㎥
 function wireUsageUnit(shubetsuName, unitSpanId) {
   const span = document.getElementById(unitSpanId);
@@ -1326,6 +1344,16 @@ function unifiedBlockFmtHTML(n) {
         <select id="${p}plan_name"><option value="">契約種別を選択してください</option></select>
       </div>
     </div>
+    <div class="row">
+      <div class="field" data-field="${p}tatemono_kubun">
+        <label>建物区分（ガス取次のみ）</label>
+        <select id="${p}tatemono_kubun"></select>
+      </div>
+      <div class="field" data-field="${p}gyoushu">
+        <label>業種（ガス取次のみ）</label>
+        <select id="${p}gyoushu"></select>
+      </div>
+    </div>
 
     <div class="section-title">供給地点番号・住所</div>
     <div class="row">
@@ -1338,10 +1366,11 @@ function unifiedBlockFmtHTML(n) {
   </fieldset>`;
 }
 
-// PDF（検針内容確認シート・診断シート）用の項目。①で入力済みの値（契約プラン・
-// 契約種別・契約名義・供給地点番号・使用場所住所）は読み取り専用（グレー）で
-// 同じ並び順の中に表示し、残りのPDF専用項目とまとめて1つのブロックにする。
-// ①NU/調整FMTの入力画面には出さず、②PDFを作成の画面にのみ表示する。
+// PDF（検針内容確認シート・診断シート）用の項目。①と共有の項目（契約プラン・
+// 契約種別・供給地点番号・使用場所住所）はここでも編集可能な項目として表示し、
+// bindTwoWay/bindRadioGroupsTwoWay でどちらの画面からでもリアルタイムに同期する。
+// 残りのPDF専用項目とまとめて1つのブロックにする。①NU/調整FMTの入力画面には
+// 出さず、②PDFを作成の画面にのみ表示する。
 function unifiedBlockPdfExtraHTML(n) {
   const p = `u_b${n}_`;
   const showDoujou = n >= 2;
@@ -1371,7 +1400,15 @@ function unifiedBlockPdfExtraHTML(n) {
         <label><input type="radio" name="${p}plan" value="other"> その他</label>
         <label><input type="radio" name="${p}plan" value="" checked> 選択なし</label>
       </div>
-      ${readonlyTextField(p + 'view_keishubetsu', '契約種別（①で入力・自動反映）')}
+      <div class="field" data-group="${p}keishubetsu_mirror">
+        <label>契約種別</label>
+        <div class="radio-group">
+          <label><input type="radio" name="${p}keishubetsu_mirror" value="juryou"> 従量</label>
+          <label><input type="radio" name="${p}keishubetsu_mirror" value="douryoku"> 動力</label>
+          <label><input type="radio" name="${p}keishubetsu_mirror" value="gas"> ガス</label>
+          <label><input type="radio" name="${p}keishubetsu_mirror" value="" checked> 選択なし</label>
+        </div>
+      </div>
     </div>
     <div class="row">
       ${textField(p + 'plan_other_text', 'その他プラン名（その他選択時のみ必須）')}
@@ -1387,11 +1424,11 @@ function unifiedBlockPdfExtraHTML(n) {
     </div>
     <div class="row">
       ${textField(p + 'customer_no', 'お客様番号（数字のみ・最大23桁）', null, true)}
-      ${readonlyTextField(p + 'view_supply_no', '供給地点特定番号（①で入力・自動反映）')}
+      ${textField(p + 'view_supply_no', '供給地点特定番号（数字のみ・電気22桁／ガス17桁）', null, true)}
     </div>
     <div class="row">
-      ${readonlyTextField(p + 'view_yubin', '使用場所郵便番号（①で入力・自動反映）')}
-      ${readonlyWideTextField(p + 'view_address', '契約使用場所住所（①で入力・自動反映）')}
+      ${textField(p + 'view_yubin', '使用場所郵便番号（任意）', '例: 123-4567')}
+      ${wideTextField(p + 'view_address', '契約使用場所住所（任意）' + ACCURACY_NOTE)}
     </div>
 
     <div class="section-title">検針・明細情報</div>
@@ -1418,50 +1455,73 @@ function unifiedBlockPdfExtraHTML(n) {
   </fieldset>`;
 }
 
-// ②画面の読み取り専用ミラー欄に、①で入力済みの値を反映する。
-function syncBlockSummary(n) {
-  const p = `u_b${n}_`;
-  const set = (id, val) => { const elx = document.getElementById(id); if (elx) elx.value = val; };
-  set(p + 'view_keishubetsu', fmtKeishubetsuLabel(p));
-  set(p + 'view_supply_no', document.getElementById(p + 'supply_no')?.value || '');
-  set(p + 'view_yubin', document.getElementById(p + 'yubin')?.value || '');
-  set(p + 'view_address', document.getElementById(p + 'address')?.value || '');
+// ①と②、どちらの画面からでも共通項目を入力できるように、値の変更を
+// 双方向に同期する。テキスト／セレクト用（無限ループ防止に同期中フラグを使う）。
+function bindTwoWay(id1, id2) {
+  const el1 = document.getElementById(id1);
+  const el2 = document.getElementById(id2);
+  if (!el1 || !el2) return;
+  let syncing = false;
+  const push = (from, to) => {
+    if (syncing || to.value === from.value) return;
+    syncing = true;
+    to.value = from.value;
+    to.dispatchEvent(new Event('input', { bubbles: true }));
+    to.dispatchEvent(new Event('change', { bubbles: true }));
+    syncing = false;
+  };
+  el1.addEventListener('input', () => push(el1, el2));
+  el2.addEventListener('input', () => push(el2, el1));
 }
 
-document.getElementById('u_blocks').addEventListener('input', handleBlockFmtFieldChange);
-document.getElementById('u_blocks').addEventListener('change', handleBlockFmtFieldChange);
-function handleBlockFmtFieldChange(e) {
-  const idOrName = e.target.id || e.target.name || '';
-  const m = idOrName.match(/^u_b(\d+)_/);
-  if (m) syncBlockSummary(Number(m[1]));
+// 同上・ラジオボタングループ用。もう片方の選択状態を合わせたうえで、
+// canonical側（元々ゲート系ロジックが紐付いている name）に change を
+// 発火し直し、力率／プラン名などの連動ロジックが正しく動くようにする。
+function bindRadioGroupsTwoWay(canonicalName, mirrorName) {
+  const canonicalGroup = () => Array.from(document.querySelectorAll(`input[name="${canonicalName}"]`));
+  const mirrorGroup = () => Array.from(document.querySelectorAll(`input[name="${mirrorName}"]`));
+  if (!canonicalGroup().length || !mirrorGroup().length) return;
+  let syncing = false;
+  const setChecked = (group, value) => group.forEach(r => { r.checked = (r.value === value); });
+  canonicalGroup().forEach(r => r.addEventListener('change', () => {
+    if (syncing) return;
+    syncing = true;
+    setChecked(mirrorGroup(), checkedValue(canonicalName));
+    syncing = false;
+  }));
+  mirrorGroup().forEach(r => r.addEventListener('change', () => {
+    if (syncing) return;
+    syncing = true;
+    setChecked(canonicalGroup(), checkedValue(mirrorName));
+    canonicalGroup().forEach(r2 => r2.dispatchEvent(new Event('change', { bubbles: true })));
+    syncing = false;
+  }));
+  setChecked(mirrorGroup(), checkedValue(canonicalName));
 }
-
-function syncTopLevelSummary() {
-  const set = (id, val) => { const elx = document.getElementById(id); if (elx) elx.value = val; };
-  set('view_u_keiyakusha', document.getElementById('u_keiyakusha')?.value || '');
-  set('view_fmt_yubin', document.getElementById('fmt_yubin')?.value || '');
-  set('view_fmt_address', document.getElementById('fmt_address')?.value || '');
-}
-['u_keiyakusha', 'fmt_yubin', 'fmt_address'].forEach(id => {
-  document.getElementById(id).addEventListener('input', syncTopLevelSummary);
-});
 
 function wireUnifiedBlockDynamicFields(n) {
   const p = `u_b${n}_`;
   wireRikiritsuGate(p + 'keishubetsu', p + 'rikiritsu');
   wirePlanNameGate(p + 'keishubetsu', p + 'plan_name');
+  wireGasOnlySelect(p + 'keishubetsu', p + 'tatemono_kubun', TATEMONO_KUBUN_OPTIONS);
+  wireGasOnlySelect(p + 'keishubetsu', p + 'gyoushu', GYOUSHU_OPTIONS);
   wireUsageUnit(p + 'keishubetsu', p + 'shiyouryou_unit');
   wireSupplyNoGate(p + 'keishubetsu', p + 'supply_no');
+  wireSupplyNoGate(p + 'keishubetsu', p + 'view_supply_no');
   wireDaysAutoCalc(p + 'kenshin_from', p + 'kenshin_to', p + 'nissu');
   wireThousandsFormatter(p + 'meisai_kingaku');
   wireYubinFormatter(p + 'yubin');
+  wireYubinFormatter(p + 'view_yubin');
+  bindRadioGroupsTwoWay(p + 'keishubetsu', p + 'keishubetsu_mirror');
+  bindTwoWay(p + 'supply_no', p + 'view_supply_no');
+  bindTwoWay(p + 'yubin', p + 'view_yubin');
+  bindTwoWay(p + 'address', p + 'view_address');
 }
 
 function appendUnifiedBlock(n) {
   document.getElementById('u_blocks').appendChild(el(unifiedBlockFmtHTML(n)));
   document.getElementById('u_blocks_pdf').appendChild(el(unifiedBlockPdfExtraHTML(n)));
   wireUnifiedBlockDynamicFields(n);
-  syncBlockSummary(n);
 }
 
 function renderUnifiedBlocks() {
@@ -1474,7 +1534,10 @@ document.getElementById('u_addBlock').addEventListener('click', () => {
   appendUnifiedBlock(uBlockCount);
 });
 renderUnifiedBlocks();
-syncTopLevelSummary();
+bindTwoWay('u_keiyakusha', 'view_u_keiyakusha');
+bindTwoWay('fmt_yubin', 'view_fmt_yubin');
+bindTwoWay('fmt_address', 'view_fmt_address');
+wireYubinFormatter('view_fmt_yubin');
 
 function collectKenshinValues() {
   const values = {};
@@ -2424,6 +2487,12 @@ function generateFmt1Text() {
     const bAddr = val(p + 'address');
     lines.push(`使用場所住所：${bYubin ? `〒${bYubin}${bAddr ? ' ' : ''}` : ''}${bAddr}`);
     lines.push(`プラン名：${val(p + 'plan_name')}`);
+    if (checkedValue(p + 'keishubetsu') === 'gas') {
+      lines.push('▼建物区分');
+      lines.push(val(p + 'tatemono_kubun'));
+      lines.push('▼業種');
+      lines.push(val(p + 'gyoushu'));
+    }
     lines.push('');
   }
   lines.push('');
