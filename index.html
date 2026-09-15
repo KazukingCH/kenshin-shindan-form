@@ -134,7 +134,7 @@
           <label><input type="checkbox" id="fmt_biko_rescue"> トラブル解決レスキュー(初年度無料)</label>
           <label><input type="checkbox" id="fmt_biko_drstore"> Dr.store B特典(2ヶ月無料)</label>
           <label><input type="checkbox" id="fmt_biko_isupport"> Iサポート付帯(2ヶ月無料)</label>
-          <label><input type="checkbox" id="fmt_biko_gas_maintenance"> ガス設備メンテナンス(3ヶ月無料)</label>
+          <label><input type="checkbox" id="fmt_biko_gas_maintenance"> ガス設備メンテナンス(3ヶ月無料)（動力契約がある場合のみ選択可）</label>
         </div>
       </div>
       <div class="row">
@@ -566,6 +566,7 @@ legend {
   cursor: pointer;
 }
 input[type="radio"], input[type="checkbox"] { accent-color: var(--accent); }
+.checkbox-group label:has(input:disabled) { color: var(--muted); cursor: not-allowed; opacity: 0.65; }
 
 .section-title {
   font-size: 12.5px;
@@ -1198,6 +1199,26 @@ function wireGasOnlySelect(shubetsuName, selectId, options) {
   apply();
 }
 
+// 「契約住所と同じ」チェック時は契約使用場所住所欄を無効化し、「契約住所と同じ」
+// という文字列そのものを値として表示する（NU FMTの出力にもそのまま使われる）。
+function wireAddressSameGate(checkboxId, addressId) {
+  const checkbox = document.getElementById(checkboxId);
+  const input = document.getElementById(addressId);
+  if (!checkbox || !input) return;
+  let savedValue = '';
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+      savedValue = input.value === '契約住所と同じ' ? savedValue : input.value;
+      input.value = '契約住所と同じ';
+      input.disabled = true;
+    } else {
+      input.disabled = false;
+      input.value = savedValue;
+    }
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+
 // 使用量の単位は契約種別で切り替える：従量/動力＝kWh、ガス＝㎥
 function wireUsageUnit(shubetsuName, unitSpanId) {
   const span = document.getElementById(unitSpanId);
@@ -1363,6 +1384,11 @@ function unifiedBlockFmtHTML(n) {
     <div class="row">
       ${wideTextField(p + 'address', '契約使用場所住所（任意）' + ACCURACY_NOTE)}
     </div>
+    <div class="row">
+      <div class="checkbox-group">
+        <label><input type="checkbox" id="${p}address_same"> 契約住所と同じ</label>
+      </div>
+    </div>
   </fieldset>`;
 }
 
@@ -1512,16 +1538,34 @@ function wireUnifiedBlockDynamicFields(n) {
   wireThousandsFormatter(p + 'meisai_kingaku');
   wireYubinFormatter(p + 'yubin');
   wireYubinFormatter(p + 'view_yubin');
+  wireAddressSameGate(p + 'address_same', p + 'address');
   bindRadioGroupsTwoWay(p + 'keishubetsu', p + 'keishubetsu_mirror');
   bindTwoWay(p + 'supply_no', p + 'view_supply_no');
   bindTwoWay(p + 'yubin', p + 'view_yubin');
   bindTwoWay(p + 'address', p + 'view_address');
 }
 
+// ガス設備メンテナンスは動力契約がある場合のみ選択できる（従量・ガスのみの
+// 申込では選択不可）。いずれかのブロックの契約種別が変わるたびに再判定する。
+function updateGasMaintenanceAvailability() {
+  const checkbox = document.getElementById('fmt_biko_gas_maintenance');
+  if (!checkbox) return;
+  let hasDouryoku = false;
+  for (let n = 1; n <= uBlockCount; n++) {
+    if (checkedValue(`u_b${n}_keishubetsu`) === 'douryoku') { hasDouryoku = true; break; }
+  }
+  checkbox.disabled = !hasDouryoku;
+  if (!hasDouryoku) checkbox.checked = false;
+}
+document.getElementById('u_blocks').addEventListener('change', (e) => {
+  if (e.target.name && /^u_b\d+_keishubetsu$/.test(e.target.name)) updateGasMaintenanceAvailability();
+});
+
 function appendUnifiedBlock(n) {
   document.getElementById('u_blocks').appendChild(el(unifiedBlockFmtHTML(n)));
   document.getElementById('u_blocks_pdf').appendChild(el(unifiedBlockPdfExtraHTML(n)));
   wireUnifiedBlockDynamicFields(n);
+  updateGasMaintenanceAvailability();
 }
 
 function renderUnifiedBlocks() {
