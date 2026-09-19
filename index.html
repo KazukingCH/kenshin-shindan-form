@@ -58,16 +58,30 @@
         <div id="fmt_kakutoku_bi_slot"></div>
       </div>
       <div class="row">
-        <div class="field"><label>屋号名</label><input type="text" id="fmt_yagou"></div>
-        <div class="field"><label>屋号名（カナ）</label><input type="text" id="fmt_yagou_kana"></div>
+        <div class="field" data-group="fmt_jigyou_keitai">
+          <label>屋号／法人</label>
+          <div class="radio-group">
+            <label><input type="radio" name="fmt_jigyou_keitai" value="屋号"> 屋号</label>
+            <label><input type="radio" name="fmt_jigyou_keitai" value="法人"> 法人</label>
+            <label><input type="radio" name="fmt_jigyou_keitai" value="" checked> 選択なし</label>
+          </div>
+        </div>
       </div>
       <div class="row">
-        <div class="field"><label>ご契約者名</label><input type="text" id="u_keiyakusha"></div>
+        <div class="field"><label id="fmt_yagou_label">屋号名</label><input type="text" id="fmt_yagou"></div>
+        <div class="field"><label id="fmt_yagou_kana_label">屋号名（カナ）</label><input type="text" id="fmt_yagou_kana"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>ご契約者名（この申込書の代表者と一致させてください）</label><input type="text" id="u_keiyakusha"></div>
         <div class="field"><label>契約者名（カナ）</label><input type="text" id="fmt_keiyakusha_kana"></div>
       </div>
       <div class="row">
+        <div class="field"><label>ご担当者名</label><input type="text" id="u_tantousha"></div>
+        <div class="field"><label>担当者名（カナ）</label><input type="text" id="fmt_tantousha_kana"></div>
+      </div>
+      <div class="row">
         <div class="field"><label>郵便番号</label><input type="text" id="fmt_yubin" placeholder="例: 123-4567"></div>
-        <div class="field wide"><label>契約住所（郵便番号を除く住所部分）</label><input type="text" id="fmt_address"></div>
+        <div class="field wide"><label>契約住所（郵便番号を除く住所部分・簡易申込書と一致させてください）</label><input type="text" id="fmt_address"></div>
       </div>
     </fieldset>
 
@@ -108,6 +122,7 @@
           <label>支払方法</label>
           <div class="radio-group">
             <label><input type="radio" name="fmt_shiharai_houhou" value="コンビニ払い（有料）"> コンビニ払い（有料）</label>
+            <label><input type="radio" name="fmt_shiharai_houhou" value="コンビニ払い（無料）"> コンビニ払い（無料）</label>
             <label><input type="radio" name="fmt_shiharai_houhou" value="口座"> 口座</label>
             <label><input type="radio" name="fmt_shiharai_houhou" value="クレジットカード"> クレジットカード</label>
             <label><input type="radio" name="fmt_shiharai_houhou" value="" checked> 選択なし</label>
@@ -135,10 +150,20 @@
           <label><input type="checkbox" id="fmt_biko_drstore"> Dr.store B特典(2ヶ月無料)</label>
           <label><input type="checkbox" id="fmt_biko_isupport"> Iサポート付帯(2ヶ月無料)</label>
           <label><input type="checkbox" id="fmt_biko_gas_maintenance"> ガス設備メンテナンス(3ヶ月無料)（従量契約との併用不可）</label>
+          <label><input type="checkbox" id="fmt_biko_denkiryou_oshirase"> 電気量のお知らせ(税込165円)</label>
+          <label><input type="checkbox" id="fmt_biko_fukusuu_meisai"> 複数明細(税込220円)</label>
         </div>
       </div>
       <div class="row">
-        <div class="field"><label>録音種別</label><input type="text" id="fmt_rokuon_shubetsu"></div>
+        <div class="field" data-group="fmt_rokuon_shubetsu">
+          <label>録音種別</label>
+          <div class="radio-group">
+            <label><input type="radio" name="fmt_rokuon_shubetsu" value="自社機"> 自社機</label>
+            <label><input type="radio" name="fmt_rokuon_shubetsu" value="ベルセールス"> ベルセールス</label>
+            <label><input type="radio" name="fmt_rokuon_shubetsu" value="ベルセールス&自社機"> ベルセールス&自社機</label>
+            <label><input type="radio" name="fmt_rokuon_shubetsu" value="" checked> 選択なし</label>
+          </div>
+        </div>
       </div>
     </fieldset>
 
@@ -193,7 +218,7 @@
       <legend>お客様情報</legend>
       <div class="row">
         <div class="field" data-field="view_u_keiyakusha"><label>ご契約者名</label><input type="text" id="view_u_keiyakusha"></div>
-        <div class="field"><label>ご担当者名</label><input type="text" id="u_tantousha"></div>
+        <div class="field" data-field="view_u_tantousha"><label>ご担当者名</label><input type="text" id="view_u_tantousha"></div>
       </div>
       <div class="row">
         <div class="field" data-field="view_fmt_yubin"><label>郵便番号</label><input type="text" id="view_fmt_yubin" placeholder="例: 123-4567"></div>
@@ -1296,6 +1321,17 @@ function wireYubinFormatter(id) {
 }
 wireYubinFormatter('fmt_yubin');
 
+// 屋号／法人の選択に応じて「屋号名」欄のラベルを「屋号名」⇄「法人名」に切り替える
+// （NU/調整FMTの出力側は jigyouMeiLabel() で同じ切り替えを行う）。
+function jigyouMeiLabel() {
+  return checkedValue('fmt_jigyou_keitai') === '法人' ? '法人名' : '屋号名';
+}
+document.querySelectorAll('input[name="fmt_jigyou_keitai"]').forEach(r => r.addEventListener('change', () => {
+  const label = jigyouMeiLabel();
+  document.getElementById('fmt_yagou_label').textContent = label;
+  document.getElementById('fmt_yagou_kana_label').textContent = `${label}（カナ）`;
+}));
+
 // 電話番号は数字を携帯（3-4-4）／固定電話（3-3-4）の桁数に応じて自動整形する。
 function wirePhoneFormatter(id) {
   const input = document.getElementById(id);
@@ -1579,6 +1615,7 @@ document.getElementById('u_addBlock').addEventListener('click', () => {
 });
 renderUnifiedBlocks();
 bindTwoWay('u_keiyakusha', 'view_u_keiyakusha');
+bindTwoWay('u_tantousha', 'view_u_tantousha');
 bindTwoWay('fmt_yubin', 'view_fmt_yubin');
 bindTwoWay('fmt_address', 'view_fmt_address');
 wireYubinFormatter('view_fmt_yubin');
@@ -2500,8 +2537,9 @@ function generateFmt1Text() {
   lines.push(`獲得担当者名：${val('fmt_kakutoku_tantousha')}`);
   lines.push(`獲得商談日：${fullDateValue('fmt_kakutoku_bi')}`);
   lines.push('');
-  lines.push(`屋号名：${val('fmt_yagou')}`);
-  lines.push(`屋号名（カナ）：${val('fmt_yagou_kana')}`);
+  const jigyouLabel1 = jigyouMeiLabel();
+  lines.push(`${jigyouLabel1}：${val('fmt_yagou')}`);
+  lines.push(`${jigyouLabel1}（カナ）：${val('fmt_yagou_kana')}`);
 
   let juryouCount = 0, douryokuCount = 0, gasCount = 0;
   for (let n = 1; n <= uBlockCount; n++) {
@@ -2516,6 +2554,8 @@ function generateFmt1Text() {
   lines.push('');
   lines.push(`契約者名：${val('u_keiyakusha')}`);
   lines.push(`契約者名（カナ）：${val('fmt_keiyakusha_kana')}`);
+  lines.push(`担当者名：${val('u_tantousha') || '未記載'}`);
+  lines.push(`担当者名（カナ）：${val('fmt_tantousha_kana') || '未記載'}`);
   lines.push('');
   const yubin = val('fmt_yubin');
   const addr = val('fmt_address');
@@ -2567,11 +2607,13 @@ function generateFmt1Text() {
   if (document.getElementById('fmt_biko_drstore')?.checked) lines.push('Dr.store B特典(2ヶ月無料)');
   if (document.getElementById('fmt_biko_isupport')?.checked) lines.push('Iサポート付帯(2ヶ月無料)');
   if (document.getElementById('fmt_biko_gas_maintenance')?.checked) lines.push('ガス設備メンテナンス(3ヶ月無料)');
+  if (document.getElementById('fmt_biko_denkiryou_oshirase')?.checked) lines.push('電気量のお知らせ(税込165円)');
+  if (document.getElementById('fmt_biko_fukusuu_meisai')?.checked) lines.push('複数明細(税込220円)');
   lines.push('');
   lines.push('連絡希望時間');
   lines.push('└前確：キャッチ');
   lines.push('');
-  lines.push(`録音種別：${val('fmt_rokuon_shubetsu')}`);
+  lines.push(`録音種別：${checkedValue('fmt_rokuon_shubetsu')}`);
 
   return lines.join('\n');
 }
@@ -2584,8 +2626,9 @@ function generateFmt2Text() {
   lines.push('@J-lineアシスタント_月岡');
   lines.push('@J-lineアシスタント_和田');
   lines.push('【前確依頼】');
-  lines.push(`屋号名：${val('fmt_yagou')}`);
-  lines.push(`屋号名（フリガナ）：${val('fmt_yagou_kana')}`);
+  const jigyouLabel2 = jigyouMeiLabel();
+  lines.push(`${jigyouLabel2}：${val('fmt_yagou')}`);
+  lines.push(`${jigyouLabel2}（フリガナ）：${val('fmt_yagou_kana')}`);
   lines.push(`コール応対者名：${val('fmt_call_taiousha')}`);
   lines.push(`コール応対者名（フリガナ）：${val('fmt_call_taiousha_kana')}`);
   lines.push(`電話番号：${val('fmt_keitai')}`);
@@ -2610,8 +2653,9 @@ function generateFmt3Text() {
   const lines = [];
   lines.push('お世話になっております。');
   lines.push('');
-  lines.push(`屋号名：${val('fmt_yagou')}`);
-  lines.push(`屋号名（カナ）：${val('fmt_yagou_kana')}`);
+  const jigyouLabel3 = jigyouMeiLabel();
+  lines.push(`${jigyouLabel3}：${val('fmt_yagou')}`);
+  lines.push(`${jigyouLabel3}（カナ）：${val('fmt_yagou_kana')}`);
   lines.push('');
   lines.push(`従量：${juryouCount}`);
   lines.push(`動力：${douryokuCount}`);
