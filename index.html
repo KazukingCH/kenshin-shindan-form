@@ -50,6 +50,10 @@
     <h2>①NU/調整FMTの入力</h2>
     <p class="desc">まずこちらに入力してください。コピペ用テキスト（NU/調整FMT）に必要な項目のみを表示しています。ここで入力した内容は「②PDFを作成」の画面にも自動的に反映されます。1件目は必須、2件目以降は必要な分だけ追加してください。</p>
     <div class="privacy-note"><span class="dot"></span>入力データはこのページの中だけで処理されます。外部には一切送信されません。</div>
+    <div class="autosave-bar">
+      <p class="status-msg ok" id="autosave_notice"></p>
+      <button type="button" id="clear_saved_data" class="autosave-clear">入力内容をクリアする</button>
+    </div>
 
     <fieldset>
       <legend>お客様情報（共通）</legend>
@@ -488,6 +492,29 @@ main {
   border-radius: 50%;
   background: var(--success);
 }
+
+.autosave-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: -10px 0 20px;
+}
+.autosave-bar .status-msg { margin: 0; }
+.autosave-clear {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px 0;
+  margin-left: auto;
+}
+.autosave-clear:hover { color: var(--danger); }
 
 fieldset {
   border: 1px solid var(--border);
@@ -1619,6 +1646,108 @@ bindTwoWay('u_tantousha', 'view_u_tantousha');
 bindTwoWay('fmt_yubin', 'view_fmt_yubin');
 bindTwoWay('fmt_address', 'view_fmt_address');
 wireYubinFormatter('view_fmt_yubin');
+
+/* ===================== 自動保存（localStorage） =====================
+ * モバイルでタブを切り替えるとブラウザがページを再読み込みし、入力中の内容が
+ * 消えてしまうことがある。これを防ぐため、入力のたびに localStorage へ保存し、
+ * 読み込み時に自動で復元する。サーバーには一切送信されない（プライバシー方針
+ * と同じ扱い。localStorage はこの端末のこのブラウザだけに保存される）。
+ */
+const AUTOSAVE_KEY = 'kenshin_shindan_form_v1';
+let autosaveTimer = null;
+
+function serializeFormState() {
+  const state = { uBlockCount, fields: {} };
+  const root = document.querySelector('main');
+  root.querySelectorAll('input[type="text"], input[type="email"], select').forEach(elx => {
+    if (elx.id) state.fields[elx.id] = elx.value;
+  });
+  root.querySelectorAll('input[type="checkbox"]').forEach(elx => {
+    if (elx.id) state.fields['check:' + elx.id] = elx.checked;
+  });
+  const seenRadioNames = new Set();
+  root.querySelectorAll('input[type="radio"]').forEach(elx => {
+    if (elx.name && !seenRadioNames.has(elx.name)) {
+      seenRadioNames.add(elx.name);
+      state.fields['radio:' + elx.name] = checkedValue(elx.name);
+    }
+  });
+  return state;
+}
+
+function saveFormState() {
+  try {
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(serializeFormState()));
+  } catch (e) { /* ストレージが使えない場合は諦める（致命的ではない） */ }
+}
+
+function scheduleAutosave() {
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(saveFormState, 400);
+}
+
+function restoreFormState() {
+  let saved;
+  try {
+    const raw = localStorage.getItem(AUTOSAVE_KEY);
+    if (!raw) return;
+    saved = JSON.parse(raw);
+  } catch (e) { return; }
+  if (!saved || !saved.fields) return;
+
+  while (uBlockCount < (saved.uBlockCount || 1)) {
+    uBlockCount++;
+    appendUnifiedBlock(uBlockCount);
+  }
+
+  // ラジオボタン（特に契約種別）を先に復元する。プラン名などの<select>は
+  // 契約種別の change イベントで選択肢が組み立てられるため、後回しにすると
+  // 選択肢がまだ無く値がセットできない。
+  const keys = Object.keys(saved.fields);
+  const radioKeys = keys.filter(k => k.startsWith('radio:'));
+  const otherKeys = keys.filter(k => !k.startsWith('radio:'));
+
+  radioKeys.forEach(key => {
+    const value = saved.fields[key];
+    const name = key.slice(6);
+    if (!value) return;
+    const input = document.querySelector(`input[name="${name}"][value="${CSS.escape(String(value))}"]`);
+    if (input) {
+      input.checked = true;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+
+  otherKeys.forEach(key => {
+    const value = saved.fields[key];
+    if (key.startsWith('check:')) {
+      const elx = document.getElementById(key.slice(6));
+      if (elx && value) {
+        elx.checked = true;
+        elx.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      return;
+    }
+    const elx = document.getElementById(key);
+    if (!elx || !value) return;
+    elx.value = value;
+    elx.dispatchEvent(new Event('input', { bubbles: true }));
+    elx.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+
+  setStatus('autosave_notice', '前回の入力内容を復元しました。', 'ok');
+}
+
+document.querySelector('main').addEventListener('input', scheduleAutosave);
+document.querySelector('main').addEventListener('change', scheduleAutosave);
+
+document.getElementById('clear_saved_data').addEventListener('click', () => {
+  if (!confirm('入力した内容をすべて消去します。よろしいですか？')) return;
+  try { localStorage.removeItem(AUTOSAVE_KEY); } catch (e) {}
+  location.reload();
+});
+
+restoreFormState();
 
 function collectKenshinValues() {
   const values = {};
