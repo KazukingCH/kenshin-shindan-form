@@ -80,6 +80,11 @@
         <div class="field"><label>契約者名（カナ）</label><input type="text" id="fmt_keiyakusha_kana"></div>
       </div>
       <div class="row">
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="tantousha_none"> 担当者がいない（未記載にする）</label>
+        </div>
+      </div>
+      <div class="row" id="tantousha_fields_row">
         <div class="field"><label>ご担当者名</label><input type="text" id="u_tantousha"></div>
         <div class="field"><label>担当者名（カナ）</label><input type="text" id="fmt_tantousha_kana"></div>
       </div>
@@ -221,8 +226,8 @@
     <fieldset>
       <legend>お客様情報</legend>
       <div class="row">
-        <div class="field" data-field="view_u_keiyakusha"><label>ご契約者名</label><input type="text" id="view_u_keiyakusha"></div>
-        <div class="field" data-field="view_u_tantousha"><label>ご担当者名</label><input type="text" id="view_u_tantousha"></div>
+        <div class="field" data-field="view_u_keiyakusha"><label>ご契約者名（①の屋号名／法人名と連動）</label><input type="text" id="view_u_keiyakusha"></div>
+        <div class="field" data-field="view_u_tantousha"><label>ご担当者名（①のご契約者名と連動）</label><input type="text" id="view_u_tantousha"></div>
       </div>
       <div class="row">
         <div class="field" data-field="view_fmt_yubin"><label>郵便番号</label><input type="text" id="view_fmt_yubin" placeholder="例: 123-4567"></div>
@@ -301,7 +306,6 @@
     <div class="img-modal-body" id="img_modal_body"></div>
   </div>
 </div>
-
 
 <style>
 :root {
@@ -1397,9 +1401,12 @@ function getCircledLabel(n) {
 }
 // 検針シート・診断シート、どちらの共通情報欄（契約者名・担当者名）にも
 // 使われる、ブロック番号を持たない共有フィールドの対応表。
+// PDFの「ご契約者名」は①の屋号名／法人名、PDFの「ご担当者名」は①のご契約者名
+// （＝申込書の代表者と一致させる名前）を印字する。u_tantousha（①の「ご担当者名」）
+// はNU/調整FMT側の担当者名としてのみ使い、PDFには印字しない。
 const SHARED_DOC_FIELDS = {
-  k_keiyakusha: 'u_keiyakusha', k_tantousha: 'u_tantousha',
-  s_keiyakusha: 'u_keiyakusha', s_tantousha: 'u_tantousha',
+  k_keiyakusha: 'fmt_yagou', k_tantousha: 'u_keiyakusha',
+  s_keiyakusha: 'fmt_yagou', s_tantousha: 'u_keiyakusha',
 };
 
 // NU/調整FMTのテキスト生成に使う項目のみ（①NU FMTが実際に参照するのは契約種別・
@@ -1639,11 +1646,36 @@ document.getElementById('u_addBlock').addEventListener('click', () => {
   appendUnifiedBlock(uBlockCount);
 });
 renderUnifiedBlocks();
-bindTwoWay('u_keiyakusha', 'view_u_keiyakusha');
-bindTwoWay('u_tantousha', 'view_u_tantousha');
+// ②画面上部「ご契約者名」は①の屋号名／法人名、「ご担当者名」は①のご契約者名を
+// 表示・編集する欄（PDFの印字元と一致させるため）。
+bindTwoWay('fmt_yagou', 'view_u_keiyakusha');
+bindTwoWay('u_keiyakusha', 'view_u_tantousha');
 bindTwoWay('fmt_yubin', 'view_fmt_yubin');
 bindTwoWay('fmt_address', 'view_fmt_address');
 wireYubinFormatter('view_fmt_yubin');
+
+// 「担当者がいない」チェック時はご担当者名／担当者名（カナ）の入力欄自体を
+// 非表示にする（値も空にする）。NU FMT側は既存の || '未記載' フォールバックで
+// 自動的に「未記載」と出力される。
+function wireTantoushaNoneGate() {
+  const checkbox = document.getElementById('tantousha_none');
+  const row = document.getElementById('tantousha_fields_row');
+  const nameInput = document.getElementById('u_tantousha');
+  const kanaInput = document.getElementById('fmt_tantousha_kana');
+  if (!checkbox || !row) return;
+  const apply = () => {
+    row.classList.toggle('hidden', checkbox.checked);
+    if (checkbox.checked) {
+      nameInput.value = '';
+      kanaInput.value = '';
+      nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+      kanaInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  };
+  checkbox.addEventListener('change', apply);
+  apply();
+}
+wireTantoushaNoneGate();
 
 /* ===================== 自動保存（localStorage） =====================
  * モバイルでタブを切り替えるとブラウザがページを再読み込みし、入力中の内容が
@@ -2681,8 +2713,12 @@ function generateFmt1Text() {
   lines.push('');
   lines.push(`契約者名：${val('u_keiyakusha')}`);
   lines.push(`契約者名（カナ）：${val('fmt_keiyakusha_kana')}`);
-  lines.push(`担当者名：${val('u_tantousha') || '未記載'}`);
-  lines.push(`担当者名（カナ）：${val('fmt_tantousha_kana') || '未記載'}`);
+  const tantousha = val('u_tantousha');
+  const tantoushaKana = val('fmt_tantousha_kana');
+  if (tantousha || tantoushaKana) {
+    lines.push(`担当者名：${tantousha || '未記載'}`);
+    lines.push(`担当者名（カナ）：${tantoushaKana || '未記載'}`);
+  }
   lines.push('');
   const yubin = val('fmt_yubin');
   const addr = val('fmt_address');
