@@ -1529,10 +1529,10 @@ function unifiedBlockPdfExtraHTML(n) {
     <div class="row">
       ${yearMonthField(p + 'taisho', '対象年月', true)}
       ${textFieldUnit(p + 'shiyouryou', '使用量', '例: 350', true, p + 'shiyouryou_unit', 'kWh')}
-      ${readonlyTextField(p + 'nissu', '日数（検針期間から自動計算）')}
+      ${readonlyTextField(p + 'nissu', '日数（検針期間から自動計算・未記載でもOK）')}
     </div>
     <div class="row">
-      ${dateRangeField(p + 'kenshin_from', p + 'kenshin_to', '検針期間', true)}
+      ${dateRangeField(p + 'kenshin_from', p + 'kenshin_to', '検針期間（任意）', false)}
     </div>
     <div class="row">
       ${textField(p + 'meisai_kingaku', '明細金額合計（円）', '例: 12345', true)}
@@ -2540,8 +2540,6 @@ function validateKenshin() {
     markInvalidExactLength(p + 'supply_no', `${label}の供給地点特定番号（${supplyNoLength(p + 'keishubetsu')}桁）`, errors, supplyNoLength(p + 'keishubetsu'));
     markInvalidDate(p + 'taisho', `${label}の対象年月`, errors, false);
     markInvalidField(p + 'shiyouryou', `${label}の使用量`, errors);
-    markInvalidDateRange(p + 'kenshin_from', p + 'kenshin_to', `${label}の検針期間`, errors);
-    markInvalidField(p + 'nissu', `${label}の日数`, errors);
     markInvalidField(p + 'meisai_kingaku', `${label}の明細金額合計`, errors);
     markInvalidDate(p + 'kakunin', `${label}の確認日時`, errors, true);
     markInvalidField(p + 'denryoku_gas', `${label}の電力会社/ガス会社`, errors);
@@ -2576,8 +2574,6 @@ function validateShindan() {
     markInvalidExactLength(p + 'supply_no', `${label}の供給地点特定番号（${supplyNoLength(p + 'keishubetsu')}桁）`, errors, supplyNoLength(p + 'keishubetsu'));
     markInvalidDate(p + 'taisho', `${label}の対象年月`, errors, false);
     markInvalidField(p + 'shiyouryou', `${label}の使用量`, errors);
-    markInvalidDateRange(p + 'kenshin_from', p + 'kenshin_to', `${label}の検針期間`, errors);
-    markInvalidField(p + 'nissu', `${label}の日数`, errors);
     markInvalidField(p + 'meisai_kingaku', `${label}の明細金額合計`, errors);
     markInvalidDate(p + 'kakunin', `${label}の確認日時`, errors, true);
     markInvalidField(p + 'denryoku_gas', `${label}の電力会社/ガス会社`, errors);
