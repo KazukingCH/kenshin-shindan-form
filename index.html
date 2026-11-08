@@ -97,6 +97,7 @@
     <div id="u_blocks"></div>
     <div class="block-toggle" id="u_addBlockWrap">
       <button type="button" id="u_addBlock">＋ 契約を追加する</button>
+      <button type="button" id="u_removeBlock" class="block-remove">－ 最後の契約を削除する</button>
     </div>
 
     <fieldset>
@@ -651,6 +652,10 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--accent); }
   cursor: pointer;
 }
 .block-toggle button:hover { background: var(--danger-bg); }
+.block-toggle { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.block-toggle button.block-remove { border-color: var(--border); color: var(--muted); }
+.block-toggle button.block-remove:hover:not(:disabled) { border-color: var(--danger); color: var(--danger); }
+.block-toggle button:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .step-nav {
   text-align: right;
@@ -1630,10 +1635,38 @@ document.getElementById('u_blocks').addEventListener('change', (e) => {
 });
 
 function appendUnifiedBlock(n) {
-  document.getElementById('u_blocks').appendChild(el(unifiedBlockFmtHTML(n)));
-  document.getElementById('u_blocks_pdf').appendChild(el(unifiedBlockPdfExtraHTML(n)));
+  const fmtEl = el(unifiedBlockFmtHTML(n));
+  const pdfEl = el(unifiedBlockPdfExtraHTML(n));
+  fmtEl.dataset.block = n;
+  pdfEl.dataset.block = n;
+  document.getElementById('u_blocks').appendChild(fmtEl);
+  document.getElementById('u_blocks_pdf').appendChild(pdfEl);
   wireUnifiedBlockDynamicFields(n);
   updateGasMaintenanceAvailability();
+  updateRemoveBlockButton();
+}
+
+// 契約の削除は「最後の契約」のみ。全処理が契約1〜Nの連番を前提にしているため、
+// 途中の契約を抜くと番号がずれてしまう。1件目は削除不可。
+function updateRemoveBlockButton() {
+  const btn = document.getElementById('u_removeBlock');
+  if (btn) btn.disabled = uBlockCount <= 1;
+}
+function blockHasInput(n) {
+  const fields = document.querySelectorAll(`[data-block="${n}"] input[type="text"], [data-block="${n}"] select`);
+  if (Array.from(fields).some(f => f.value && !f.disabled)) return true;
+  return Array.from(document.querySelectorAll(`[data-block="${n}"] input[type="radio"]:checked, [data-block="${n}"] input[type="checkbox"]:checked`))
+    .some(r => r.type === 'checkbox' || r.value);
+}
+function removeLastBlock() {
+  if (uBlockCount <= 1) return;
+  const n = uBlockCount;
+  if (blockHasInput(n) && !confirm(`${getCircledLabel(n)}の契約を削除します。入力済みの内容は消えます。よろしいですか？`)) return;
+  document.querySelectorAll(`[data-block="${n}"]`).forEach(x => x.remove());
+  uBlockCount--;
+  updateGasMaintenanceAvailability();
+  updateRemoveBlockButton();
+  scheduleAutosave();
 }
 
 function renderUnifiedBlocks() {
@@ -1641,6 +1674,7 @@ function renderUnifiedBlocks() {
   // any values already typed into earlier blocks.
   for (let n = 1; n <= uBlockCount; n++) appendUnifiedBlock(n);
 }
+document.getElementById('u_removeBlock').addEventListener('click', removeLastBlock);
 document.getElementById('u_addBlock').addEventListener('click', () => {
   uBlockCount++;
   appendUnifiedBlock(uBlockCount);
